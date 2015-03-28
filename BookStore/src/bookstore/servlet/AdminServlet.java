@@ -3,6 +3,7 @@ package bookstore.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +16,8 @@ import org.json.simple.JSONObject;
 import java.sql.*;
 
 import bookstore.entitybean.UserBean;
+import bookstore.sessionbean.ResultInfo;
+import bookstore.sessionbean.UserSysBean;
 import bookstore.utility.Common;
 import bookstore.utility.DBConn;
 import bookstore.utility.PageName;
@@ -27,6 +30,8 @@ public class AdminServlet extends HttpServlet  {
 	 */
 	private static final long serialVersionUID = 14L;
 	
+	@EJB
+	private UserSysBean usrsysbean;
 	
 	private HttpServletRequest request;
 	private HttpServletResponse response;
@@ -78,14 +83,10 @@ public class AdminServlet extends HttpServlet  {
 			doRmUser();
 		else
 			writer.print(Common.app_error(2, "未指定操作"));
-		
-		
 	}
 
 	private void doRmUser() 
 	{
-		try 
-		{
 			if(!usr.getId().equals("1"))
 		    {
 	           	writer.write(Common.app_error(3, "无操作权限"));
@@ -106,24 +107,8 @@ public class AdminServlet extends HttpServlet  {
 		        return;
 			}
 			
-			Connection conn = DBConn.getDbConn();
-			String sql = "DELETE FROM Users WHERE u_id=?";
-			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, id);
-			stmt.execute();
-			if(stmt.getUpdateCount() == 0)
-			{
-				writer.write(Common.app_error(8, "用户不存在"));
-	        	return;
-			}
-			
-			JSONObject json = new JSONObject();
-		    json.put("errno", 0);
-		    writer.write(json.toJSONString());
-		}
-        catch(Exception ex)
-        { writer.write(Common.app_error(2, ex.getMessage())); }
-		
+			ResultInfo res = usrsysbean.rm(id);
+			writer.write(res.toJsonString());	
 	}
 
 }
