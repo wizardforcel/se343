@@ -1,0 +1,19 @@
+功能 -- Servelet -- Page -- 链接 -- SessionBean
+
+显示主页 -- IndexServlet -- index.jsp -- /index -- 无
+显示登录页 -- IndexServlet -- login.jsp -- /index?action=login -- 无
+登录 -- IndexServlet -- 无 -- /index?action=login&un=xxx -- LoginBean
+退出 -- IndexServlet -- 无 -- /index?action=logout -- 无
+显示注册页 -- IndexServlet -- reg.jsp --/index?action=reg -- 无
+注册 -- IndexServlet -- 无 -- /index?action=reg&un=xxx -- RegBean
+显示图书页 -- IndexServlet -- book.jsp -- /index?action=book -- BookListBean
+添加图书 -- BookServlet -- [ajax] -- /book?action=add -- BookListBean
+删除图书 -- BookServlet -- [ajax] -- /book?action=rm -- BookListBean
+添加到购物车 -- BookServlet -- [ajax] -- /book?action=addcart -- CartBean
+查看购物车页 -- IndexServlet -- cart.jsp -- /index?action=cart -- CartBean
+删除购物车中的书 -- CartServlet -- [ajax] -- /cart?action=rm -- CartBean
+下订单 -- CartServlet -- [ajax] -- /cart?action=order -- CartBean
+查看订单页 -- IndexServlet -- order.jsp -- /index?action=order -- OrderListBean
+查看用户管理页 -- IndexServlet -- admin.jsp -- /index?action=admin -- UserListBean
+删除用户 -- AdminServlet -- [ajax] -- /admin?action=rmuser -- UserListBean
+查看统计页 -- IndexServlet -- account.jsp -- /index?action=account -- AccountBean

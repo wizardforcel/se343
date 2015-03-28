@@ -1,0 +1,27 @@
+﻿h1, h2, h3, div
+{
+  font-family: "微软雅黑";
+}
+
+#maindir
+{
+  margin-top: 15px;
+}
+
+#form
+{
+  max-width: 440px;
+}
+
+
+#banner
+{
+  margin-top: 20px;
+  border: 1px solid #CCC;
+}
+
+.book-btns, .cart-btns
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
