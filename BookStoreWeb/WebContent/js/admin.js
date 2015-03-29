@@ -8,7 +8,7 @@ $(function()
 		var id = $(row.children()[0]).text();
 		$.get("./admin?action=rmuser&id=" + id, function(res)
 		{
-			  var json = eval("(" + res + ")");
+			  var json = JSON.parse(res);
 		      if(json.errno == 0)
 		    	  row.remove();
 			  else

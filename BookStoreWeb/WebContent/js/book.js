@@ -10,7 +10,7 @@ $(function()
 		$.get("./book?action=addcart&name=" + name + 
 		      "&count=" + cnt, function(res)
 		{
-		  var json = eval("(" + res + ")");
+		  var json = JSON.parse(res);
 		  if(json.errno == 0)
 			alert("添加成功！");
 		  else
@@ -26,7 +26,7 @@ $(function()
 		var name = $(row.children()[1]).text();
 		$.get("./book?action=rm&name=" + name, function(res)
 		{
-			  var json = eval("(" + res + ")");
+			  var json = JSON.parse(res);
 		      if(json.errno == 0)
 		    	  row.remove();
 			  else
@@ -48,7 +48,7 @@ $(function()
 		 $.get("./book?action=add&name=" + name + "&isbn=" + isbn, 
 		       function(res)
 		 {
-		     var json = eval("(" + res + ")");
+		     var json = JSON.parse(res);
 		     if(json.errno == 0)
 		     {
 		         var row = $("<tr class=\"book-item\"></tr>");

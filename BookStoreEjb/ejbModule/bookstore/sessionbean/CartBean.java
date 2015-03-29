@@ -7,23 +7,22 @@ import org.json.simple.JSONObject;
 import bookstore.entitybean.CartItemBean;
 import bookstore.remote.CartRemote;
 import bookstore.remote.ResultInfo;
+import bookstore.utility.DBConfig;
 import bookstore.utility.DBConn;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 @Stateful
 public class CartBean implements CartRemote
 {
-	private List<CartItemBean> cart;
-	
-	public CartBean()
-	{
-		cart = new ArrayList<CartItemBean>();
-	}
+	private List<CartItemBean> cart
+	  = new ArrayList<CartItemBean>();
 	
 	@Override
 	public ResultInfo add(String name, int count)
@@ -117,6 +116,49 @@ public class CartBean implements CartRemote
 	public List<CartItemBean> getList()
 	{
 		return cart;
+	}
+
+	@Override
+	public ResultInfo addOrder(int uid) 
+	{
+		try 
+		{
+			if(cart.size() == 0)
+	        	return new ResultInfo(8, "购物车中无图书");
+			
+			Connection conn = DBConn.getDbConn();
+			
+			String sql = "INSERT INTO orders (u_id, o_time) VALUES (?,?)";
+			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			stmt.setInt(1, uid);
+			stmt.setLong(2, new Date().getTime() / 1000);
+			stmt.executeUpdate();
+			ResultSet rs = stmt.getGeneratedKeys();
+			if(!rs.next())
+				return new ResultInfo(2, "创建订单失败！");
+			int orderid = rs.getInt(1);
+	
+			sql = "INSERT INTO orderitems VALUES";
+			for(CartItemBean item : cart)
+			{
+				sql += String.format(" (%d, %s, %d),",
+						             orderid, item.getIsbn(), item.getCount());
+			}
+			sql = sql.substring(0, sql.length() - 1);
+			Statement st = conn.createStatement();
+			st.execute(sql);
+			
+			cart.clear();
+			return new ResultInfo(0, "");
+		}
+		catch(SQLException sqlex)
+		{
+			return new ResultInfo(1023 + sqlex.getErrorCode(), "数据库错误：" + sqlex.getMessage());
+		}
+	    catch(Exception ex)
+	    {
+	    	return new ResultInfo(2, ex.getMessage());
+	    }
 	}
 	
 }

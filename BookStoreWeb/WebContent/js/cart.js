@@ -8,7 +8,7 @@ $(function()
 		var name = $(row.children()[0]).text();
 		$.get("./cart?action=rm&name=" + name, function(res)
 		{
-			var json = eval("(" + res + ")");
+			var json = JSON.parse(res);
 			if(json.errno == 0)
 				row.remove();
 			else
@@ -24,9 +24,9 @@ $(function()
 		var row = $(this).parent().parent();
 		var name = $(row.children()[0]).text();
 		$.get("./cart?action=fix&name=" + name + 
-				  "&num=" + num, function(res)
+			  "&num=" + num, function(res)
 		{
-			var json = eval("(" + res + ")");
+			var json = JSON.parse(res);
 			if(json.errno == 0)
 			{
 				$(row.children()[1]).text(num);
@@ -46,11 +46,26 @@ $(function()
 			return;
 		$.get("./cart?action=clear", function(res)
 		{
-			var json = eval("(" + res + ")");
+			var json = JSON.parse(res);
 			if(json.errno != "0")
-				alert("删除失败！");
+				alert("删除失败！" + json.errmsg);
 			else
 			    $(".cart-item").remove();
+		});
+	});
+	
+	$("#orderbtn").click(function()
+	{
+		$.get("./cart?action=addorder", function(res)
+		{
+			var json = JSON.parse(res);
+			if(json.errno != "0")
+				alert("下单失败！" + json.errmsg);
+			else
+			{
+				$(".cart-item").remove();
+				alert("下单成功！");
+			}
 		});
 	});
 

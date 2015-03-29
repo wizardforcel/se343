@@ -92,12 +92,14 @@ public class CartServlet extends HttpServlet
 		  
 		  String action = request.getParameter("action");
 		  if(action == null) action = "";
-		  if(action.compareTo("clear") == 0)
+		  if(action.equals("clear"))
 		      doClear();
-		  else if(action.compareTo("rm") == 0)
+		  else if(action.equals("rm"))
 		      doRm();
-		  else if(action.compareTo("fix") == 0)
+		  else if(action.equals("fix"))
 		      doFix();
+		  else if(action.equals("addorder"))
+		      doAddOrder();
 		  else
 			  writer.print(Common.app_error(2, "未指定操作"));	  
 	}
@@ -144,6 +146,12 @@ public class CartServlet extends HttpServlet
 	    int count = Integer.parseInt(numstr);
 		    
 	    ResultInfo res = cartbean.fix(name, count);
+	    writer.write(res.toJsonString());
+	}
+	
+	private void doAddOrder()
+	{
+		ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()));
 	    writer.write(res.toJsonString());
 	}
 

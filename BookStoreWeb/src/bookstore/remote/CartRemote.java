@@ -14,4 +14,5 @@ public interface CartRemote
 	public ResultInfo rm(String name);
 	public ResultInfo fix(String name, int count);
 	public List<CartItemBean> getList();
+	public ResultInfo addOrder(int uid);
 }

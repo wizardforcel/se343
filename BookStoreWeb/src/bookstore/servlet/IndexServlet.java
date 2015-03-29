@@ -116,7 +116,7 @@ public class IndexServlet extends HttpServlet
 			doAdmin();
 		else if(action.equals("account"))
 			doAccount();
-		else //index.jsp
+		else //index
 		{
 		    request.setAttribute("un", usr.getUn());
 			request.getRequestDispatcher("./template/index.jsp")
@@ -147,7 +147,7 @@ public class IndexServlet extends HttpServlet
 		QueryResultInfo<AccountBean> res = accbean.getList();
 		if(res.getErrno() != 0)
 		{
-			writer.write(res.toJsonString());
+			writer.write(Common.show_msg("列表获取失败！" + res.getErrmsg(), "./" + PageName.INDEX_PG));
 			return;
 		}
 		
@@ -297,7 +297,7 @@ public class IndexServlet extends HttpServlet
 		QueryResultInfo<OrderItemBean> res = ordbean.getList(usr.getId());
 		if(res.getErrno() != 0)
 		{
-			writer.write(Common.show_msg("获取订单失败！" + res.getErrmsg(), 
+			writer.write(Common.show_msg("订单获取失败！" + res.getErrmsg(), 
 	                      "./" + PageName.INDEX_PG));
 		}
 		
@@ -319,7 +319,8 @@ public class IndexServlet extends HttpServlet
 		QueryResultInfo<UserBean> res = usrsysbean.getList();
 		if(res.getErrno() != 0)
 		{
-			writer.write(res.toJsonString());
+			writer.write(Common.show_msg("列表获取失败！" + res.getErrmsg(), 
+                                         "./" + PageName.INDEX_PG));
 			return;
 		}
 		
