@@ -1,5 +1,7 @@
 package bookstore.servlet;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -12,7 +14,6 @@ import bookstore.entitybean.OrderItemBean;
 import bookstore.entitybean.UserBean;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.UserResultInfo;
-
 import bookstore.utility.Common;
 import bookstore.remote.*;
 import bookstore.utility.PageName;
@@ -38,6 +39,24 @@ public class IndexServlet extends HttpServlet
     private CartRemote cartbean;
     private OrderRemote ordbean;
     private AccountListRemote accbean;
+    
+    private void initRemote()
+    {
+    	try
+		{
+			final Context context = new InitialContext(); 
+
+			usrsysbean = (UserSysRemote) context.lookup("UserSysBean/remote");
+			bklstbean = (BookListRemote) context.lookup("BookListBean/remote");
+			cartbean = (CartRemote) context.lookup("CartBean/remote");
+			ordbean = (OrderRemote) context.lookup("OrderBean/remote");
+			accbean = (AccountListRemote) context.lookup("AccountListBean/remote");
+		}
+		catch(Exception e)
+		{
+            e.printStackTrace();
+		}
+    }
     
 	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -68,6 +87,7 @@ public class IndexServlet extends HttpServlet
 	private void doRequest() 
 			throws ServletException, IOException
 	{
+		initRemote();
 		request.setAttribute("IN_USE", true);
 		usr = new UserBean();
 		usr.getCookie(request);

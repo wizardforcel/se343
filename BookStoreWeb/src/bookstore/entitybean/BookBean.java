@@ -1,12 +1,11 @@
 package bookstore.entitybean;
 
-import javax.servlet.annotation.WebServlet;
-
 public class BookBean 
 {
-  private String isbn;
-  private String name;
+  private String isbn = "";
+  private String name = "";
   
+  public BookBean() {}
   public BookBean(String isbn_, String name_)
   {
 	  isbn = isbn_;

@@ -1,13 +1,12 @@
 package bookstore.entitybean;
 
-import javax.servlet.annotation.WebServlet;
-
 public class CartItemBean 
 {
-	private String isbn;
-	private String name;
+	private String isbn = "";
+	private String name = "";
 	private int count;
-  
+	
+	public CartItemBean() {}
 	public CartItemBean(String isbn_, String name_, int count_)
 	{
 		isbn = isbn_;

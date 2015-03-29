@@ -1,6 +1,8 @@
 package bookstore.servlet;
 
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -9,8 +11,12 @@ import org.json.simple.JSONObject;
 
 import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
+import bookstore.remote.AccountListRemote;
+import bookstore.remote.BookListRemote;
 import bookstore.remote.CartRemote;
+import bookstore.remote.OrderRemote;
 import bookstore.remote.ResultInfo;
+import bookstore.remote.UserSysRemote;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
 
@@ -32,6 +38,19 @@ public class CartServlet extends HttpServlet
     private PrintWriter writer;
     private HttpSession session;
     
+    private void initRemote()
+    {
+    	try
+		{
+			final Context context = new InitialContext(); 
+
+			cartbean = (CartRemote) context.lookup("CartBean/remote");
+		}
+		catch(Exception e)
+		{
+            e.printStackTrace();
+		}
+    }
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -62,6 +81,7 @@ public class CartServlet extends HttpServlet
 	private void doRequest()
 			throws IOException, ServletException
 	{
+		  initRemote();
 		  usr = new UserBean();
 		  usr.getCookie(request);
 		  if(!usr.isValid())

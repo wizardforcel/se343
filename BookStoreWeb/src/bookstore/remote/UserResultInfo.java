@@ -2,6 +2,8 @@ package bookstore.remote;
 
 public class UserResultInfo extends ResultInfo 
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int uid;
 	
 	public UserResultInfo(int errno_, String errmsg_, int uid_)

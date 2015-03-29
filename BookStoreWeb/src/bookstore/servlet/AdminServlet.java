@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,17 +18,19 @@ import org.json.simple.JSONObject;
 import java.sql.*;
 
 import bookstore.entitybean.UserBean;
+import bookstore.remote.AccountListRemote;
+import bookstore.remote.BookListRemote;
+import bookstore.remote.CartRemote;
+import bookstore.remote.OrderRemote;
 import bookstore.remote.ResultInfo;
 import bookstore.remote.UserSysRemote;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
 
 @WebServlet("/" + PageName.ADMIN_PG)
-public class AdminServlet extends HttpServlet  {
+public class AdminServlet extends HttpServlet  
+{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 14L;
 	
 	private UserSysRemote usrsysbean;
@@ -36,6 +40,20 @@ public class AdminServlet extends HttpServlet  {
     private UserBean usr;
     private PrintWriter writer;
     private HttpSession session;
+    
+    private void initRemote()
+    {
+    	try
+		{
+			final Context context = new InitialContext(); 
+
+			usrsysbean = (UserSysRemote) context.lookup("UserSysBean/remote");
+		}
+		catch(Exception e)
+		{
+            e.printStackTrace();
+		}
+    }
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -66,6 +84,7 @@ public class AdminServlet extends HttpServlet  {
 	private void doRequest()
 			throws IOException, ServletException
 	{
+		initRemote();
 		usr = new UserBean();
 		usr.getCookie(request);
 		if(!usr.isValid())

@@ -1,6 +1,8 @@
 package bookstore.servlet;
 
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -10,10 +12,13 @@ import org.json.simple.JSONObject;
 import bookstore.entitybean.BookBean;
 import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
+import bookstore.remote.AccountListRemote;
 import bookstore.remote.BookListRemote;
 import bookstore.remote.CartRemote;
+import bookstore.remote.OrderRemote;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.ResultInfo;
+import bookstore.remote.UserSysRemote;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
 
@@ -46,6 +51,21 @@ public class BookServlet extends HttpServlet
 	//query.php
 	//return {"errno":xxx,"errmsg":"xxx","data":[...]}
     
+    private void initRemote()
+    {
+    	try
+		{
+			final Context context = new InitialContext(); 
+
+			bklstbean = (BookListRemote) context.lookup("BookListBean/remote");
+			cartbean = (CartRemote) context.lookup("CartBean/remote");
+		}
+		catch(Exception e)
+		{
+            e.printStackTrace();
+		}
+    }
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
     		throws IOException, ServletException
@@ -75,6 +95,7 @@ public class BookServlet extends HttpServlet
 	private void doRequest()
 			throws IOException, ServletException
 	{
+		  initRemote();
 		  usr = new UserBean();
 		  usr.getCookie(request);
 		  if(!usr.isValid())

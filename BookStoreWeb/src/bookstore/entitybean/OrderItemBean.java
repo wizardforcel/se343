@@ -3,7 +3,7 @@ package bookstore.entitybean;
 public class OrderItemBean 
 {
 	private int id;
-	private String isbn;
+	private String isbn = "";
 	private int num;
 	private int time;
 	
