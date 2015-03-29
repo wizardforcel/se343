@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 
 import bookstore.entitybean.CartItemBean;
 import bookstore.remote.CartRemote;
-import bookstore.utility.Common;
+import bookstore.remote.ResultInfo;
 import bookstore.utility.DBConn;
 
 import java.sql.Connection;

@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import javax.ejb.*;
 
 import bookstore.entitybean.UserBean;
+import bookstore.remote.QueryResultInfo;
+import bookstore.remote.ResultInfo;
+import bookstore.remote.UserResultInfo;
 import bookstore.remote.UserSysRemote;
-import bookstore.utility.Common;
 import bookstore.utility.DBConn;
-import bookstore.utility.PageName;
 
 @Stateless
 public class UserSysBean implements UserSysRemote 

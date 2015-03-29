@@ -12,5 +12,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="ejbModule/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="ejbModule/mysql-connector-java-5.1.7-bin.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

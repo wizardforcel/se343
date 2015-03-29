@@ -16,10 +16,9 @@ import org.json.simple.JSONObject;
 import java.sql.*;
 
 import bookstore.entitybean.UserBean;
-import bookstore.sessionbean.ResultInfo;
-import bookstore.sessionbean.UserSysBean;
+import bookstore.remote.ResultInfo;
+import bookstore.remote.UserSysRemote;
 import bookstore.utility.Common;
-import bookstore.utility.DBConn;
 import bookstore.utility.PageName;
 
 @WebServlet("/" + PageName.ADMIN_PG)
@@ -30,8 +29,7 @@ public class AdminServlet extends HttpServlet  {
 	 */
 	private static final long serialVersionUID = 14L;
 	
-	@EJB
-	private UserSysBean usrsysbean;
+	private UserSysRemote usrsysbean;
 	
 	private HttpServletRequest request;
 	private HttpServletResponse response;

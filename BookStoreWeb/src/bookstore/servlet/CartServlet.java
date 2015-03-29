@@ -9,8 +9,8 @@ import org.json.simple.JSONObject;
 
 import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
-import bookstore.sessionbean.CartBean;
-import bookstore.sessionbean.ResultInfo;
+import bookstore.remote.CartRemote;
+import bookstore.remote.ResultInfo;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
 
@@ -22,8 +22,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unchecked")
 public class CartServlet extends HttpServlet 
 {
-	@EJB
-	private CartBean cartbean;
+	private CartRemote cartbean;
 	
 	private static final long serialVersionUID = 3L;
 	

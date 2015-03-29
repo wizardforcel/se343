@@ -1,4 +1,4 @@
-package bookstore.sessionbean;
+package bookstore.remote;
 
 public class UserResultInfo extends ResultInfo 
 {

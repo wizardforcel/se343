@@ -13,7 +13,8 @@ import org.json.simple.JSONObject;
 
 import bookstore.entitybean.BookBean;
 import bookstore.remote.BookListRemote;
-import bookstore.utility.Common;
+import bookstore.remote.QueryResultInfo;
+import bookstore.remote.ResultInfo;
 import bookstore.utility.DBConn;
 
 @Stateless

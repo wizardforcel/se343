@@ -1,4 +1,4 @@
-package bookstore.sessionbean;
+package bookstore.remote;
 
 import java.util.*;
 

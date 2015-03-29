@@ -9,9 +9,8 @@ import javax.ejb.*;
 
 import bookstore.entitybean.*;
 import bookstore.remote.AccountListRemote;
-import bookstore.utility.Common;
+import bookstore.remote.QueryResultInfo;
 import bookstore.utility.DBConn;
-import bookstore.utility.PageName;
 
 @Stateless
 public class AccountListBean implements AccountListRemote

@@ -10,13 +10,11 @@ import org.json.simple.JSONObject;
 import bookstore.entitybean.BookBean;
 import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
-import bookstore.sessionbean.BookListBean;
-import bookstore.sessionbean.CartBean;
-import bookstore.sessionbean.QueryResultInfo;
-import bookstore.sessionbean.ResultInfo;
+import bookstore.remote.BookListRemote;
+import bookstore.remote.CartRemote;
+import bookstore.remote.QueryResultInfo;
+import bookstore.remote.ResultInfo;
 import bookstore.utility.Common;
-import bookstore.utility.DBConfig;
-import bookstore.utility.DBConn;
 import bookstore.utility.PageName;
 
 import java.io.*;
@@ -28,11 +26,8 @@ import java.util.ArrayList;
 public class BookServlet extends HttpServlet 
 {
 	
-	@EJB
-	private BookListBean bklstbean;
-	
-	@EJB
-	private CartBean cartbean;
+	private BookListRemote bklstbean;
+	private CartRemote cartbean;
 	
 	private static final long serialVersionUID = 2L;
 	

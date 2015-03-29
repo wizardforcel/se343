@@ -10,9 +10,8 @@ import javax.ejb.*;
 
 import bookstore.entitybean.OrderItemBean;
 import bookstore.remote.OrderRemote;
-import bookstore.utility.Common;
+import bookstore.remote.QueryResultInfo;
 import bookstore.utility.DBConn;
-import bookstore.utility.PageName;
 
 @Stateless
 public class OrderBean implements OrderRemote 

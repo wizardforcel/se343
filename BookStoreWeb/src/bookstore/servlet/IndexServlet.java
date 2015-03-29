@@ -10,16 +10,11 @@ import bookstore.entitybean.BookBean;
 import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.OrderItemBean;
 import bookstore.entitybean.UserBean;
-import bookstore.sessionbean.AccountListBean;
-import bookstore.sessionbean.BookListBean;
-import bookstore.sessionbean.CartBean;
-import bookstore.sessionbean.OrderBean;
-import bookstore.sessionbean.QueryResultInfo;
-import bookstore.sessionbean.UserSysBean;
-import bookstore.sessionbean.UserResultInfo;
+import bookstore.remote.QueryResultInfo;
+import bookstore.remote.UserResultInfo;
+
 import bookstore.utility.Common;
-import bookstore.utility.DBConfig;
-import bookstore.utility.DBConn;
+import bookstore.remote.*;
 import bookstore.utility.PageName;
 
 import java.io.*;
@@ -38,20 +33,11 @@ public class IndexServlet extends HttpServlet
     private PrintWriter writer;
     private HttpSession session;
 	
-    @EJB
-    private UserSysBean usrsysbean;
-    
-    @EJB
-    private BookListBean bklstbean;
-    
-    @EJB
-    private CartBean cartbean;
-    
-    @EJB
-    private OrderBean ordbean;
-    
-    @EJB
-    private AccountListBean accbean;
+    private UserSysRemote usrsysbean;
+    private BookListRemote bklstbean;
+    private CartRemote cartbean;
+    private OrderRemote ordbean;
+    private AccountListRemote accbean;
     
 	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
