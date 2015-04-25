@@ -92,7 +92,7 @@ public class BookServlet extends HttpServlet
 	
 	private void doAdd()
 	{
-		    if(usr.getId().compareTo("1") != 0)
+		    if(!usr.getId().equals("1"))
 		    {
 		       	writer.write(Common.app_error(3, "无操作权限"));
 		       	return;
@@ -107,9 +107,9 @@ public class BookServlet extends HttpServlet
 	        	writer.write(Common.app_error(4, "请输入名称"));
 	        	return;
 	        }
-	        if(!isbn.matches("^[\\d\\-]+$"))
+	        if(!isbn.matches("^\\d+$"))
 	        {
-	        	writer.write(Common.app_error(4, "ISBN格式有误"));
+	        	writer.write(Common.app_error(4, "ISBN应为数字"));
 	        	return;
 	        }
 	
@@ -119,7 +119,7 @@ public class BookServlet extends HttpServlet
 	
 	private void doRm()
 	{
-			if(usr.getId().compareTo("1") != 0)
+			if(!usr.getId().equals("1"))
 		    {
 	           	writer.write(Common.app_error(3, "无操作权限"));
 		       	return;
@@ -146,21 +146,29 @@ public class BookServlet extends HttpServlet
 				writer.write(res.toJsonString());
 				return;
 			}
-	
-	        writer.write("{\"errno\":0,\"data\":[");
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("{\"errno\":0,\"data\":[");
 			for(BookBean b : res.getList())
-				writer.write("{\"id\":" + b.getIsbn() + ",\"name\":\"" + b.getName() + "\"},");
-			writer.write("]}");
+			{
+				sb.append("{\"isbn\":")
+				  .append(b.getIsbn())
+				  .append(",\"name\":\"")
+				  .append(Common.htmlEnco(b.getName()))
+				  .append("\"},");
+			}
+			sb.setLength(sb.length() - 1);
+			sb.append("]}");
+			writer.write(sb.toString());
 	}
 	
-	@SuppressWarnings("resource")
 	private void doAddCart()
 	{
-		String name = request.getParameter("name");
-		if(name == null) name = "";
-		if(name.length() == 0)
+		String isbn = request.getParameter("isbn");
+		if(isbn == null) isbn = "";
+		if(!isbn.matches("^\\d+$"))
 		{
-			writer.write(Common.app_error(4, "请输入名称"));
+			writer.write(Common.app_error(4, "isbn应为数字"));
 	        return;
 		}
 		String countstr = request.getParameter("count");
@@ -172,7 +180,7 @@ public class BookServlet extends HttpServlet
 		}
 		int count = Integer.parseInt(countstr);
 			
-		ResultInfo res = cartbean.add(name, count);
+		ResultInfo res = cartbean.add(isbn, count);
 		writer.write(res.toJsonString());
 	}
 

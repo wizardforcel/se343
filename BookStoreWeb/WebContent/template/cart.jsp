@@ -16,6 +16,7 @@
 
     <table class="table table-striped" id="cart-tb"> 
 	  <tr>
+	    <th>isbn</th>
 	    <th>名称</th>
 	    <th>数量</th>
 	    <th>操作</th>
@@ -26,7 +27,8 @@ ArrayList<CartItemBean> items = (ArrayList<CartItemBean>)request.getAttribute("c
 	    for(CartItemBean item : items) 
 	    {
 	      out.print("<tr class=\"cart-item\">\n");
-	      out.print("<td class=\"c-name\">" + Common.htmlEnco(item.getName()) + "</td>\n" + 
+	      out.print("<td class=\"c-isbn\">" + item.getIsbn() + "</td>\n" +
+	    		    "<td class=\"c-name\">" + Common.htmlEnco(item.getName()) + "</td>\n" + 
 	                "<td class=\"c-cnt\">" + String.valueOf(item.getCount()) + "</td>\n" +
 	                "<td class=\"c-ops\">" +
 	                "<a class=\"fixbtn\">修改数量</a> | <a class=\"rmbtn\">删除</a>" + 

@@ -28,7 +28,7 @@ public class CartBean implements CartRemote, Serializable
 	  = new ArrayList<CartItemBean>();
 	
 	@Override
-	public ResultInfo add(String name, int count)
+	public ResultInfo add(String isbn, int count)
 	{
 		try
 		{
@@ -36,21 +36,20 @@ public class CartBean implements CartRemote, Serializable
 			conn.setAutoCommit(false);
 	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 			
-			String sql = "SELECT * FROM Books WHERE b_name=?";
+			String sql = "SELECT * FROM Books WHERE isbn=?";
 		    PreparedStatement stmt = conn.prepareStatement(sql);
-		    stmt.setString(1, name);
+		    stmt.setString(1, isbn);
 		    ResultSet res = stmt.executeQuery();
 		    conn.commit();
 		    if(!res.next())
 	        	return new ResultInfo(7, "图书不存在");
-		    
-		    String isbn = res.getString(1);
 				
+		    String name = res.getString(2);
 	
 			boolean exist = false;
 		    for(int i = 0; i < cart.size(); i++)
 		    {
-		    	if(cart.get(i).getName().equals(name))
+		    	if(cart.get(i).getIsbn().equals(isbn))
 		    	{
 		    		int ori_count = cart.get(i).getCount();
 		    		cart.get(i).setCount(count + ori_count);
@@ -79,12 +78,12 @@ public class CartBean implements CartRemote, Serializable
 	}
 	
 	@Override
-	public ResultInfo rm(String name)
+	public ResultInfo rm(String isbn)
 	{
 		 boolean exist = false;
 		 for(int i = 0; i < cart.size(); i++)
 		 {
-		  	if(cart.get(i).getName().equals(name))
+		  	if(cart.get(i).getIsbn().equals(isbn))
 		   	{
 		   		cart.remove(i);
 		   		exist = true;
@@ -99,12 +98,12 @@ public class CartBean implements CartRemote, Serializable
 	}
 	
 	@Override
-	public ResultInfo fix(String name, int count)
+	public ResultInfo fix(String isbn, int count)
 	{
 		boolean exist = false;
 	    for(int i = 0; i < cart.size(); i++)
 	    {
-	    	if(cart.get(i).getName().equals(name))
+	    	if(cart.get(i).getIsbn().equals(isbn))
 	    	{
 	    		cart.get(i).setCount(count);
 	    		exist = true;
@@ -169,6 +168,12 @@ public class CartBean implements CartRemote, Serializable
 	    {
 	    	return new ResultInfo(2, ex.getMessage());
 	    }
+	}
+
+	@Override
+	public ResultInfo addOrder(int uid, List<CartItemBean> list) {
+		this.cart = list;
+		return addOrder(uid);
 	}
 	
 }

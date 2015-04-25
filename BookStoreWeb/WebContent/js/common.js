@@ -1,4 +1,4 @@
-function htmlEnco()   
+function htmlEnco(str)   
 {   
   return str.replace(/&/g, "&amp;")   
             .replace(/</g, "&lt;")   

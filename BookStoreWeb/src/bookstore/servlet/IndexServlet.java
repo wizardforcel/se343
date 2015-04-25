@@ -28,12 +28,12 @@ public class IndexServlet extends HttpServlet
 	
     private UserSysRemote usrsysbean
       = SessionBeanFactory.GetUserSysBean();
-    private BookListRemote bklstbean
-      = SessionBeanFactory.GetBookListBean();
+    //private BookListRemote bklstbean
+    //  = SessionBeanFactory.GetBookListBean();
     private CartRemote cartbean
       = SessionBeanFactory.GetCartListBean();
-    private OrderRemote ordbean
-      = SessionBeanFactory.GetOrderBean();
+    //private OrderRemote ordbean
+    //  = SessionBeanFactory.GetOrderBean();
     private AccountListRemote accbean
       = SessionBeanFactory.GetAccountListBean();
         
@@ -262,7 +262,7 @@ public class IndexServlet extends HttpServlet
             return;
         } 
         
-		QueryResultInfo<BookBean> res = bklstbean.getList();
+		/*QueryResultInfo<BookBean> res = bklstbean.getList();
         if(res.getErrno() != 0)
         {
        	 writer.write(Common.show_msg("图书加载失败！" + res.getErrmsg(), 
@@ -273,7 +273,10 @@ public class IndexServlet extends HttpServlet
             request.setAttribute("books", res.getList());
             request.getRequestDispatcher("./template/book.jsp")
                    .forward(request, response);
-        }
+        }*/
+		
+		request.getRequestDispatcher("./template/book.jsp")
+               .forward(request, response);
 	}
 	
 	private void doOrder()
@@ -285,16 +288,21 @@ public class IndexServlet extends HttpServlet
             return;
         } 
 		
-		QueryResultInfo<OrderItemBean> res = ordbean.getList(usr.getId());
+		/*QueryResultInfo<OrderItemBean> res = ordbean.getList(usr.getId());
 		if(res.getErrno() != 0)
 		{
 			writer.write(Common.show_msg("订单获取失败！" + res.getErrmsg(), 
 	                      "./" + PageName.INDEX_PG));
 		}
+		else
+		{
+		    request.setAttribute("order", res.getList());
+		    request.getRequestDispatcher("./template/order.jsp")
+                   .forward(request, response);
+		}*/
 		
-		request.setAttribute("order", res.getList());
 		request.getRequestDispatcher("./template/order.jsp")
-               .forward(request, response);
+        	   .forward(request, response);
 	}
 
 	

@@ -9,10 +9,11 @@ import bookstore.entitybean.CartItemBean;
 @Remote
 public interface CartRemote 
 {
-	public ResultInfo add(String name, int count);
+	public ResultInfo add(String isbn, int count);
 	public void clear();
-	public ResultInfo rm(String name);
-	public ResultInfo fix(String name, int count);
+	public ResultInfo rm(String isbn);
+	public ResultInfo fix(String isbn, int count);
 	public List<CartItemBean> getList();
 	public ResultInfo addOrder(int uid);
+	public ResultInfo addOrder(int uid, List<CartItemBean> list);
 }

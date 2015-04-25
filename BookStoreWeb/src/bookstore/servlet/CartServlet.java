@@ -96,32 +96,69 @@ public class CartServlet extends HttpServlet
 	{		
 		cartbean.clear();
 		
+		/*ArrayList<CartItemBean> cart 
+		  = (ArrayList<CartItemBean>)session.getAttribute("cart");
+		if(cart == null)
+			cart = new ArrayList<CartItemBean>();
+		else
+			cart.clear();
+		session.setAttribute("cart", cart);
+		
 		JSONObject json = new JSONObject();
 	    json.put("errno", 0);
-	    writer.write(json.toJSONString());
+	    writer.write(json.toJSONString());*/
 	}		
 	
 	private void doRm()
 	{
-	   	String name = request.getParameter("name");
-	    if(name == null) name = "";
-	    if(name.length() == 0)
+	   	String isbn = request.getParameter("isbn");
+	    if(isbn == null) isbn = "";
+	    if(!isbn.matches("^\\d+$"))
 	    {
-	        writer.write(Common.app_error(4, "请输入名称"));
+	        writer.write(Common.app_error(4, "isbn应为数字"));
 	        return;
 	    }
 		    
-	    ResultInfo res = cartbean.rm(name);
+	    ResultInfo res = cartbean.rm(isbn);
 	    writer.write(res.toJsonString());
+	    
+	    /*ArrayList<CartItemBean> cart 
+	      = (ArrayList<CartItemBean>)session.getAttribute("cart");
+	    if(cart == null)
+	    	cart = new ArrayList<CartItemBean>();
+	    
+	    boolean exist = false;
+	    for(int i = 0; i < cart.size(); i++)
+	    {
+	    	if(cart.get(i).getIsbn().equals(isbn))
+	    	{
+	    		cart.remove(i);
+	    		exist = true;
+	    		break;
+	    	}
+	    }
+	    session.setAttribute("cart", cart);
+	    
+	    JSONObject json = new JSONObject();
+	    if(exist)
+	    {
+	    	json.put("errno", 0);
+	    }
+	    else
+	    {
+	    	json.put("errno", 7);
+	    	json.put("errmsg", "图书不存在");
+	    }
+	    writer.write(json.toJSONString());*/
 	}
 	
 	private void doFix()
 	{
-    	String name = request.getParameter("name");
-	    if(name == null) name = "";
-	    if(name.length() == 0)
+    	String isbn = request.getParameter("isbn");
+	    if(isbn == null) isbn = "";
+	    if(!isbn.matches("^\\d+$"))
 	    {
-	        writer.write(Common.app_error(4, "请输入名称"));
+	        writer.write(Common.app_error(4, "isbn应为数字"));
 	        return;
         }
     	String numstr = request.getParameter("num");
@@ -133,12 +170,47 @@ public class CartServlet extends HttpServlet
 	    }
 	    int count = Integer.parseInt(numstr);
 		    
-	    ResultInfo res = cartbean.fix(name, count);
+	    ResultInfo res = cartbean.fix(isbn, count);
 	    writer.write(res.toJsonString());
+	    
+	    /*ArrayList<CartItemBean> cart
+	      = (ArrayList<CartItemBean>)session.getAttribute("cart");
+	    if(cart == null)
+	    	cart = new ArrayList<CartItemBean>();
+	    
+	    boolean exist = false;
+	    for(int i = 0; i < cart.size(); i++)
+	    {
+	    	if(cart.get(i).getIsbn().equals(isbn))
+	    	{
+	    		cart.get(i).setCount(count);
+	    		exist = true;
+	    		break;
+	    	}
+	    }
+	    session.setAttribute("cart", cart);
+	    
+	    JSONObject json = new JSONObject();
+	    if(exist)
+	    {
+	    	json.put("errno", 0);
+	    }
+	    else
+	    {
+	    	json.put("errno", 7);
+	    	json.put("errmsg", "图书不存在");
+	    }
+	    writer.write(json.toJSONString());*/
 	}
 	
 	private void doAddOrder()
 	{
+		/*ArrayList<CartItemBean> cart
+		  = (ArrayList<CartItemBean>)session.getAttribute("cart");
+	    if(cart == null)
+	    	cart = new ArrayList<CartItemBean>();
+		ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()), cart);*/
+		
 		ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()));
 	    writer.write(res.toJsonString());
 	}

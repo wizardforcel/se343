@@ -11,7 +11,7 @@
       <h3>我的订单</h3>
     </div>
 
-    <table class="table table-striped" id="cart-tb"> 
+    <table class="table table-striped" id="order-tb"> 
 	  <tr>
 	    <th class="cart-th">订单号</th>
 	    <th class="cart-th">ISBN</th>
@@ -20,23 +20,23 @@
 	  </tr>
 	  
 <%
-	  	ArrayList<OrderItemBean> items
-	  	      = (ArrayList<OrderItemBean>)request.getAttribute("order");
-	  	    for(OrderItemBean item : items) {
+  if(false) {
+  ArrayList<OrderItemBean> items
+    = (ArrayList<OrderItemBean>)request.getAttribute("order");
+  for(OrderItemBean item : items) {
 %>
 <tr>
-  <td class="o-id"><%= item.getId() %></td>
-  <td class="o-isbn"><%= item.getIsbn() %></td>
-  <td class="o-cnt"><%= item.getNum() %></td>
-  <td class="o-time"><%
+  <td><%= item.getId() %></td>
+  <td><%= item.getIsbn() %></td>
+  <td><%= item.getNum() %></td>
+  <td>
+<%
   Date dt = new Date(item.getTime() * 1000);
-  /*String dtstr = String.format("%d-%d-%d %d:%d:%d",
-		                       dt.getYear(), dt.getMonth(), dt.getDate(),
-		                       dt.getHours(), dt.getMinutes(), dt.getSeconds());*/
   out.print(dt.toString());
-  %></td>
+%>
+  </td>
 </tr>
-<%  } %>
+<%  }} %>
 
    </table>
 	
