@@ -1,7 +1,12 @@
 package bookstore.entitybean;
 
-public class CartItemBean 
+import java.io.Serializable;
+
+public class CartItemBean implements Serializable
 {
+
+	private static final long serialVersionUID = 1L;
+	
 	private String isbn = "";
 	private String name = "";
 	private int count;

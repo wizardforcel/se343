@@ -23,6 +23,7 @@ import bookstore.remote.BookListRemote;
 import bookstore.remote.CartRemote;
 import bookstore.remote.OrderRemote;
 import bookstore.remote.ResultInfo;
+import bookstore.remote.SessionBeanFactory;
 import bookstore.remote.UserSysRemote;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
@@ -33,27 +34,14 @@ public class AdminServlet extends HttpServlet
 
 	private static final long serialVersionUID = 14L;
 	
-	private UserSysRemote usrsysbean;
+	private UserSysRemote usrsysbean
+	  = SessionBeanFactory.GetUserSysBean();
 	
 	private HttpServletRequest request;
 	private HttpServletResponse response;
     private UserBean usr;
     private PrintWriter writer;
     private HttpSession session;
-    
-    private void initRemote()
-    {
-    	try
-		{
-			final Context context = new InitialContext(); 
-
-			usrsysbean = (UserSysRemote) context.lookup("UserSysBean/remote");
-		}
-		catch(Exception e)
-		{
-            e.printStackTrace();
-		}
-    }
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -84,7 +72,6 @@ public class AdminServlet extends HttpServlet
 	private void doRequest()
 			throws IOException, ServletException
 	{
-		initRemote();
 		usr = new UserBean();
 		usr.getCookie(request);
 		if(!usr.isValid())

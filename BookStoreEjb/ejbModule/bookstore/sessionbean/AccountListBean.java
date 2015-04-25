@@ -21,10 +21,14 @@ public class AccountListBean implements AccountListRemote
 		try
 		{
 			Connection conn = DBConn.getDbConn();
+			conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+			
 			String sql = "SELECT u_id, sum(b_num) FROM orders " +
 	                     "natural join orderitems GROUP BY u_id";
 			Statement stmt = conn.createStatement();
 	        ResultSet res = stmt.executeQuery(sql);
+	        conn.commit();
 	        
 			ArrayList<AccountBean> list = new ArrayList<AccountBean>();
 			while(res.next())

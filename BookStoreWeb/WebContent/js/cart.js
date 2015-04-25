@@ -5,7 +5,7 @@ $(function()
 		if(!confirm('真的要删除吗？'))
 			return;
 		var row = $(this).parent().parent();
-		var name = $(row.children()[0]).text();
+		var name = row.children(':eq(0)').text();
 		$.get("./cart?action=rm&name=" + name, function(res)
 		{
 			var json = JSON.parse(res);
@@ -19,17 +19,20 @@ $(function()
 	var fixbtn_cb = function()
 	{
 		var num = prompt("请输入数量：", "");
-		if(num == null || num == "")
-			return;
+		if(num == null || !/^\d+$/.test(num))
+		{
+			alert('数量必须为纯数字！');
+		    return;
+		}
 		var row = $(this).parent().parent();
-		var name = $(row.children()[0]).text();
+		var name = row.children(':eq(0)').text();
 		$.get("./cart?action=fix&name=" + name + 
 			  "&num=" + num, function(res)
 		{
 			var json = JSON.parse(res);
 			if(json.errno == 0)
 			{
-				$(row.children()[1]).text(num);
+				row.children(':eq(1)').text(num);
 				alert("修改成功！");
 			}
 			else

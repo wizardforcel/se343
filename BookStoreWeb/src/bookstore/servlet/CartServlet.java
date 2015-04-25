@@ -16,6 +16,7 @@ import bookstore.remote.BookListRemote;
 import bookstore.remote.CartRemote;
 import bookstore.remote.OrderRemote;
 import bookstore.remote.ResultInfo;
+import bookstore.remote.SessionBeanFactory;
 import bookstore.remote.UserSysRemote;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
@@ -28,7 +29,8 @@ import java.util.ArrayList;
 @SuppressWarnings("unchecked")
 public class CartServlet extends HttpServlet 
 {
-	private CartRemote cartbean;
+	private CartRemote cartbean
+	  = SessionBeanFactory.GetCartListBean();
 	
 	private static final long serialVersionUID = 3L;
 	
@@ -37,20 +39,7 @@ public class CartServlet extends HttpServlet
     private UserBean usr;
     private PrintWriter writer;
     private HttpSession session;
-    
-    private void initRemote()
-    {
-    	try
-		{
-			final Context context = new InitialContext(); 
-
-			cartbean = (CartRemote) context.lookup("CartBean/remote");
-		}
-		catch(Exception e)
-		{
-            e.printStackTrace();
-		}
-    }
+   
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -81,7 +70,6 @@ public class CartServlet extends HttpServlet
 	private void doRequest()
 			throws IOException, ServletException
 	{
-		  initRemote();
 		  usr = new UserBean();
 		  usr.getCookie(request);
 		  if(!usr.isValid())

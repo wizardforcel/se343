@@ -1,15 +1,10 @@
 package bookstore.servlet;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.ejb.*;
-
 import bookstore.entitybean.AccountBean;
 import bookstore.entitybean.BookBean;
-import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.OrderItemBean;
 import bookstore.entitybean.UserBean;
 import bookstore.remote.QueryResultInfo;
@@ -19,9 +14,6 @@ import bookstore.remote.*;
 import bookstore.utility.PageName;
 
 import java.io.*;
-import java.security.NoSuchAlgorithmException;
-import java.sql.*;
-import java.util.ArrayList;
 
 @WebServlet("/" + PageName.INDEX_PG)
 public class IndexServlet extends HttpServlet
@@ -34,30 +26,17 @@ public class IndexServlet extends HttpServlet
     private PrintWriter writer;
     private HttpSession session;
 	
-    private UserSysRemote usrsysbean;
-    private BookListRemote bklstbean;
-    private CartRemote cartbean;
-    private OrderRemote ordbean;
-    private AccountListRemote accbean;
-    
-    private void initRemote()
-    {
-    	try
-		{
-			final Context context = new InitialContext(); 
-
-			usrsysbean = (UserSysRemote) context.lookup("UserSysBean/remote");
-			bklstbean = (BookListRemote) context.lookup("BookListBean/remote");
-			cartbean = (CartRemote) context.lookup("CartBean/remote");
-			ordbean = (OrderRemote) context.lookup("OrderBean/remote");
-			accbean = (AccountListRemote) context.lookup("AccountListBean/remote");
-		}
-		catch(Exception e)
-		{
-            e.printStackTrace();
-		}
-    }
-    
+    private UserSysRemote usrsysbean
+      = SessionBeanFactory.GetUserSysBean();
+    private BookListRemote bklstbean
+      = SessionBeanFactory.GetBookListBean();
+    private CartRemote cartbean
+      = SessionBeanFactory.GetCartListBean();
+    private OrderRemote ordbean
+      = SessionBeanFactory.GetOrderBean();
+    private AccountListRemote accbean
+      = SessionBeanFactory.GetAccountListBean();
+        
 	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
     		throws IOException, ServletException
@@ -87,7 +66,6 @@ public class IndexServlet extends HttpServlet
 	private void doRequest() 
 			throws ServletException, IOException
 	{
-		initRemote();
 		request.setAttribute("IN_USE", true);
 		usr = new UserBean();
 		usr.getCookie(request);
@@ -175,9 +153,16 @@ public class IndexServlet extends HttpServlet
 		    request.getRequestDispatcher("./template/login.jsp")
 		           .forward(request, response);
 		}
-		if(pw.length() == 0)
+		if(!un.matches("^[\\w\\u4e00-\\u9fa5]{1,14}$"))
 		{
-		    writer.write(Common.show_msg("登录失败！请输入密码", "./" + PageName.INDEX_PG + "?action=login"));
+			writer.write(Common.show_msg("登录失败！用户名应为1~14位汉字、数字、字母或下划线", 
+					                     "./" + PageName.INDEX_PG + "?action=login"));
+		    return;
+		}
+		
+		if(!pw.matches("^[\\x20-\\x7e]{6,16}$"))
+		{
+		    writer.write(Common.show_msg("登录失败！密码应为6~16位", "./" + PageName.INDEX_PG + "?action=login"));
 		    return;
 		}
 		pw = Common.MD5(pw);
@@ -226,7 +211,13 @@ public class IndexServlet extends HttpServlet
 	 	     request.getRequestDispatcher("./template/reg.jsp")
 	 	            .forward(request, response);
 	 	}
-	 	if(pw.length() < 6 || pw.length() > 16)
+	 	if(!un.matches("^[\\w\\u4e00-\\u9fa5]{1,14}$"))
+		{
+			writer.write(Common.show_msg("注册失败！用户名应为1~14位汉字、数字、字母或下划线", 
+					                     "./" + PageName.INDEX_PG + "?action=login"));
+		    return;
+		}
+	 	if(!pw.matches("^[\\x20-\\x7e]{6,16}$"))
 	 	{
 	 	     writer.write(Common.show_msg("注册失败！密码应为6~16位", "./" + PageName.INDEX_PG + "?action=reg"));
 	 	     return;

@@ -9,7 +9,17 @@ import java.sql.*;
 @SuppressWarnings("unchecked")
 public class Common
 {
-
+	public static String htmlEnco(String html)
+	{
+		return html.replaceAll("&", "&amp;")
+				   .replaceAll("<", "&lt;")
+				   .replaceAll(">", "&gt;")
+				   .replaceAll("\"", "&quot;")
+				   .replaceAll("'", "&#x27;")
+				   .replaceAll("/", "&#x2f;");
+	}
+	
+	
   public static String app_error(int errno, String errmsg)
   {
 	  JSONObject json = new JSONObject();

@@ -10,6 +10,7 @@ import bookstore.remote.ResultInfo;
 import bookstore.utility.DBConfig;
 import bookstore.utility.DBConn;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,9 +19,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-@Stateful
-public class CartBean implements CartRemote
+@Stateless
+public class CartBean implements CartRemote, Serializable
 {
+	private static final long serialVersionUID = 100L;
+	
 	private List<CartItemBean> cart
 	  = new ArrayList<CartItemBean>();
 	
@@ -30,11 +33,14 @@ public class CartBean implements CartRemote
 		try
 		{
 			Connection conn = DBConn.getDbConn();
+			conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 			
 			String sql = "SELECT * FROM Books WHERE b_name=?";
 		    PreparedStatement stmt = conn.prepareStatement(sql);
 		    stmt.setString(1, name);
 		    ResultSet res = stmt.executeQuery();
+		    conn.commit();
 		    if(!res.next())
 	        	return new ResultInfo(7, "图书不存在");
 		    
@@ -127,12 +133,15 @@ public class CartBean implements CartRemote
 	        	return new ResultInfo(8, "购物车中无图书");
 			
 			Connection conn = DBConn.getDbConn();
+			conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			
 			String sql = "INSERT INTO orders (u_id, o_time) VALUES (?,?)";
 			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setInt(1, uid);
 			stmt.setLong(2, new Date().getTime() / 1000);
 			stmt.executeUpdate();
+			
 			ResultSet rs = stmt.getGeneratedKeys();
 			if(!rs.next())
 				return new ResultInfo(2, "创建订单失败！");
@@ -147,6 +156,7 @@ public class CartBean implements CartRemote
 			sql = sql.substring(0, sql.length() - 1);
 			Statement st = conn.createStatement();
 			st.execute(sql);
+			conn.commit();
 			
 			cart.clear();
 			return new ResultInfo(0, "");

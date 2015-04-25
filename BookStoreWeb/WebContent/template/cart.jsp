@@ -3,6 +3,7 @@
 <%@page import="java.util.*" %>
 <%@page import="bookstore.servlet.*" %>
 <%@page import="bookstore.entitybean.*" %>
+<%@page import="bookstore.utility.*" %>
 
 <% if(request.getAttribute("IN_USE") == null) return; %>
 <jsp:include page="./header.jsp" />
@@ -25,7 +26,7 @@ ArrayList<CartItemBean> items = (ArrayList<CartItemBean>)request.getAttribute("c
 	    for(CartItemBean item : items) 
 	    {
 	      out.print("<tr class=\"cart-item\">\n");
-	      out.print("<td class=\"c-name\">" + item.getName() + "</td>\n" + 
+	      out.print("<td class=\"c-name\">" + Common.htmlEnco(item.getName()) + "</td>\n" + 
 	                "<td class=\"c-cnt\">" + String.valueOf(item.getCount()) + "</td>\n" +
 	                "<td class=\"c-ops\">" +
 	                "<a class=\"fixbtn\">修改数量</a> | <a class=\"rmbtn\">删除</a>" + 

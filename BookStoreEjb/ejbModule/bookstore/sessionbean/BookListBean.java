@@ -26,10 +26,14 @@ public class BookListBean implements BookListRemote
 		try {
 	       	 
 	        Connection conn = DBConn.getDbConn();
+	        conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
 	        
 	        String sql = "SELECT * FROM Books";
 	        Statement stmt = conn.createStatement();
 	        ResultSet res = stmt.executeQuery(sql);
+	        conn.commit();
+	        
 	        ArrayList<BookBean> list = new ArrayList<BookBean>();
 	        while(res.next())
 	           list.add(new BookBean(res.getString(1), res.getString(2)));
@@ -46,17 +50,19 @@ public class BookListBean implements BookListRemote
 	public ResultInfo add(String name, String isbn)
 	{
 		try
-		{
+		{	
 			Connection conn = DBConn.getDbConn();
+			conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    
-		    String sql = "INSERT INTO books VALUES (?,?)";
+		    String sql = "INSERT IGNORE INTO books VALUES (?,?)";
 		    PreparedStatement stmt = conn.prepareStatement(sql);
 		    stmt.setString(1, isbn);
 		    stmt.setString(2, name);
-
-		    try { stmt.executeUpdate(); }
-		    catch(Exception ex)
-		    { return new ResultInfo(6, "图书已存在"); }
+		    int effect = stmt.executeUpdate();
+		    conn.commit();
+		    if(effect == 0)
+		    	return new ResultInfo(6, "图书已存在");
 		    
 		    return new ResultInfo(0, "");
 	    	
@@ -71,13 +77,16 @@ public class BookListBean implements BookListRemote
 	{
 		try
 		{
-			
 			Connection conn = DBConn.getDbConn();
+			conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			
 			String sql = "DELETE FROM Books WHERE b_name=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, name);
-			if(stmt.executeUpdate() == 0)
+			int effect = stmt.executeUpdate();
+			conn.commit();
+			if(effect == 0)
 	        	return new ResultInfo(8, "图书不存在");
 			
 			return new ResultInfo(0, "");

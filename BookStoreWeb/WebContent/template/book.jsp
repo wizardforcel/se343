@@ -3,6 +3,7 @@
 <%@page import="java.util.*" %>
 <%@page import="bookstore.servlet.*" %>
 <%@page import="bookstore.entitybean.*" %>
+<%@page import="bookstore.utility.*" %>
 
 <% if(request.getAttribute("IN_USE") == null) return; %>
 <jsp:include page="./header.jsp" />
@@ -27,7 +28,7 @@
 	    {
 	      out.print("<tr class=\"book-item\">\n");
 	      out.print("<td class=\"b-isbn\">" + book.getIsbn() + "</td>\n"); 
-	      out.print("<td class=\"b-name\">" + book.getName() + "</td>\n"); 
+	      out.print("<td class=\"b-name\">" + Common.htmlEnco(book.getName()) + "</td>\n"); 
 	      out.print("<td class=\"b-ops\">");
 	      out.print("<a class=\"cartbtn\">添加到购物车</a>");
 	      if(is_admin)

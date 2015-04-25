@@ -1,38 +1,28 @@
 package bookstore.servlet;
 
-import javax.ejb.EJB;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import org.json.simple.JSONObject;
-
 import bookstore.entitybean.BookBean;
-import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
-import bookstore.remote.AccountListRemote;
 import bookstore.remote.BookListRemote;
 import bookstore.remote.CartRemote;
-import bookstore.remote.OrderRemote;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.ResultInfo;
-import bookstore.remote.UserSysRemote;
+import bookstore.remote.SessionBeanFactory;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
 
 import java.io.*;
-import java.sql.*;
-import java.util.ArrayList;
 
 @WebServlet("/" + PageName.BOOK_PG) 
-@SuppressWarnings("unchecked")
 public class BookServlet extends HttpServlet 
 {
-	
-	private BookListRemote bklstbean;
-	private CartRemote cartbean;
+	private BookListRemote bklstbean
+	  = SessionBeanFactory.GetBookListBean();
+	private CartRemote cartbean
+	  = SessionBeanFactory.GetCartListBean();
 	
 	private static final long serialVersionUID = 2L;
 	
@@ -50,22 +40,7 @@ public class BookServlet extends HttpServlet
 
 	//query.php
 	//return {"errno":xxx,"errmsg":"xxx","data":[...]}
-    
-    private void initRemote()
-    {
-    	try
-		{
-			final Context context = new InitialContext(); 
-
-			bklstbean = (BookListRemote) context.lookup("BookListBean/remote");
-			cartbean = (CartRemote) context.lookup("CartBean/remote");
-		}
-		catch(Exception e)
-		{
-            e.printStackTrace();
-		}
-    }
-    
+        
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
     		throws IOException, ServletException
@@ -95,7 +70,6 @@ public class BookServlet extends HttpServlet
 	private void doRequest()
 			throws IOException, ServletException
 	{
-		  initRemote();
 		  usr = new UserBean();
 		  usr.getCookie(request);
 		  if(!usr.isValid())

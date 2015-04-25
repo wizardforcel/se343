@@ -22,11 +22,15 @@ public class OrderBean implements OrderRemote
 		try
 		{
 			Connection conn = DBConn.getDbConn();
+			conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+			
 			String sql = "SELECT o_id, isbn, b_num, o_time " +
 	                   "FROM orders natural join orderitems where u_id=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, uid);
 			ResultSet res = stmt.executeQuery();
+			conn.commit();
 			
 			ArrayList<OrderItemBean> list = new ArrayList<OrderItemBean>();
 			while(res.next())
