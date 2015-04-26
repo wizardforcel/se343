@@ -169,11 +169,5 @@ public class CartBean implements CartRemote, Serializable
 	    	return new ResultInfo(2, ex.getMessage());
 	    }
 	}
-
-	@Override
-	public ResultInfo addOrder(int uid, List<CartItemBean> list) {
-		this.cart = list;
-		return addOrder(uid);
-	}
 	
 }

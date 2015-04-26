@@ -6,11 +6,13 @@ import javax.naming.InitialContext;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import javax.jms.*;
 
 import org.json.simple.JSONObject;
 
 import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
+import bookstore.messagebean.OrderMessage;
 import bookstore.remote.AccountListRemote;
 import bookstore.remote.BookListRemote;
 import bookstore.remote.CartRemote;
@@ -24,6 +26,7 @@ import bookstore.utility.PageName;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/" + PageName.CART_PG)
 @SuppressWarnings("unchecked")
@@ -205,14 +208,46 @@ public class CartServlet extends HttpServlet
 	
 	private void doAddOrder()
 	{
-		/*ArrayList<CartItemBean> cart
-		  = (ArrayList<CartItemBean>)session.getAttribute("cart");
-	    if(cart == null)
-	    	cart = new ArrayList<CartItemBean>();
-		ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()), cart);*/
-		
-		ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()));
-	    writer.write(res.toJsonString());
+		try 
+		{
+			/*ArrayList<CartItemBean> cart
+			  = (ArrayList<CartItemBean>)session.getAttribute("cart");
+		    if(cart == null)
+		    	cart = new ArrayList<CartItemBean>();
+			ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()), cart);*/
+			
+			//ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()));
+		    //writer.write(res.toJsonString());
+			
+			List<CartItemBean> list = cartbean.getList();
+			if(list.size() == 0)
+			{
+				writer.write(Common.app_error(8, "购物车中无图书"));
+				return;
+			}
+			
+			OrderMessage order = new OrderMessage();
+			order.setList(list);
+			order.setUid(Integer.parseInt(usr.getId()));
+			
+			InitialContext ctx = new InitialContext();
+			Queue dest = (Queue)ctx.lookup("queue/OrderMessageBean");
+			QueueConnectionFactory factory
+			  = (QueueConnectionFactory)ctx.lookup("ConnectionFactory");
+			QueueConnection cnn = factory.createQueueConnection();
+			QueueSession session = cnn.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
+			QueueSender sender = session.createSender(dest);
+			ObjectMessage msg = session.createObjectMessage();
+			msg.setObject(order);
+			sender.send(msg);
+			System.out.println("消息已经发出...");
+			cartbean.clear();
+			writer.write(Common.app_error(0, ""));
+		}
+		catch(Exception ex)
+		{
+			writer.write(Common.app_error(1024, ex.getMessage()));
+		}
 	}
 
 }
