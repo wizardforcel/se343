@@ -5,7 +5,6 @@
 <%@page import="bookstore.entitybean.*" %>
 <%@page import="bookstore.utility.*" %>
 
-<% if(request.getAttribute("IN_USE") == null) return; %>
 <jsp:include page="./header.jsp" />
 
   <div class="panel panel-primary">

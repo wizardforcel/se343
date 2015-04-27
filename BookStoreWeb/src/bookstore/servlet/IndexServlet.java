@@ -66,7 +66,6 @@ public class IndexServlet extends HttpServlet
 	private void doRequest() 
 			throws ServletException, IOException
 	{
-		request.setAttribute("IN_USE", true);
 		usr = new UserBean();
 		usr.getCookie(request);
 		if(usr.isValid())
@@ -97,7 +96,7 @@ public class IndexServlet extends HttpServlet
 		else //index
 		{
 		    request.setAttribute("un", usr.getUn());
-			request.getRequestDispatcher("./template/index.jsp")
+			request.getRequestDispatcher("./WEB-INF/index.jsp")
 			       .forward(request, response);
 		}
 	}
@@ -130,7 +129,7 @@ public class IndexServlet extends HttpServlet
 		}
 		
 		request.setAttribute("list", res.getList());
-		request.getRequestDispatcher("./template/account.jsp")
+		request.getRequestDispatcher("./WEB-INF/account.jsp")
 	        .forward(request, response);
 	}
 	
@@ -150,7 +149,7 @@ public class IndexServlet extends HttpServlet
 		if(pw == null) pw = "";
 		if(un.length() == 0)
 		{
-		    request.getRequestDispatcher("./template/login.jsp")
+		    request.getRequestDispatcher("./WEB-INF/login.jsp")
 		           .forward(request, response);
 		}
 		if(!un.matches("^[\\w\\u4e00-\\u9fa5]{1,14}$"))
@@ -208,7 +207,7 @@ public class IndexServlet extends HttpServlet
 	 	if(pw == null) pw = "";
 	 	if(un.length() == 0)
 	 	{
-	 	     request.getRequestDispatcher("./template/reg.jsp")
+	 	     request.getRequestDispatcher("./WEB-INF/reg.jsp")
 	 	            .forward(request, response);
 	 	}
 	 	if(!un.matches("^[\\w\\u4e00-\\u9fa5]{1,14}$"))
@@ -249,7 +248,7 @@ public class IndexServlet extends HttpServlet
 	     } 
 	    	 
        	 request.setAttribute("cart", cartbean.getList());
-      	 request.getRequestDispatcher("./template/cart.jsp")
+      	 request.getRequestDispatcher("./WEB-INF/cart.jsp")
       	        .forward(request, response);
 	}
 	
@@ -275,7 +274,7 @@ public class IndexServlet extends HttpServlet
                    .forward(request, response);
         }*/
 		
-		request.getRequestDispatcher("./template/book.jsp")
+		request.getRequestDispatcher("./WEB-INF/book.jsp")
                .forward(request, response);
 	}
 	
@@ -301,7 +300,7 @@ public class IndexServlet extends HttpServlet
                    .forward(request, response);
 		}*/
 		
-		request.getRequestDispatcher("./template/order.jsp")
+		request.getRequestDispatcher("./WEB-INF/order.jsp")
         	   .forward(request, response);
 	}
 
@@ -324,7 +323,7 @@ public class IndexServlet extends HttpServlet
 		}
 		
       	request.setAttribute("users", res.getList());
-        request.getRequestDispatcher("./template/admin.jsp")
+        request.getRequestDispatcher("./WEB-INF/admin.jsp")
                .forward(request, response);
 		
 	}

@@ -1,8 +1,8 @@
 eclipse.preferences.version=1
-encoding//WebContent/template/admin.jsp=UTF-8
-encoding//WebContent/template/book.jsp=UTF-8
-encoding//WebContent/template/header.jsp=UTF-8
-encoding//WebContent/template/index.jsp=UTF-8
-encoding//WebContent/template/login.jsp=UTF-8
-encoding//WebContent/template/reg.jsp=UTF-8
+encoding//WebContent/WEB-INF/admin.jsp=UTF-8
+encoding//WebContent/WEB-INF/book.jsp=UTF-8
+encoding//WebContent/WEB-INF/header.jsp=UTF-8
+encoding//WebContent/WEB-INF/index.jsp=UTF-8
+encoding//WebContent/WEB-INF/login.jsp=UTF-8
+encoding//WebContent/WEB-INF/reg.jsp=UTF-8
 encoding//src/bookstore/utility/Common.java=UTF-8
