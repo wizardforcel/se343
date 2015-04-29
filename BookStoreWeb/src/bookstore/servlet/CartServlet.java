@@ -231,7 +231,7 @@ public class CartServlet extends HttpServlet
 			order.setUid(Integer.parseInt(usr.getId()));
 			
 			InitialContext ctx = new InitialContext();
-			Queue dest = (Queue)ctx.lookup("queue/OrderMessageBean");
+			Queue dest = (Queue)ctx.lookup("/queue/OrderQueue");
 			QueueConnectionFactory factory
 			  = (QueueConnectionFactory)ctx.lookup("ConnectionFactory");
 			QueueConnection cnn = factory.createQueueConnection();
@@ -241,6 +241,8 @@ public class CartServlet extends HttpServlet
 			msg.setObject(order);
 			sender.send(msg);
 			System.out.println("消息已经发出...");
+			session.close();
+			cnn.close();
 			cartbean.clear();
 			writer.write(Common.app_error(0, ""));
 		}
