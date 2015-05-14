@@ -35,6 +35,7 @@
             <li><a href="./<%= PageName.INDEX_PG %>?action=book">图书</a></li>
             <li><a href="./<%= PageName.INDEX_PG %>?action=cart">购物车</a></li>
 			<li><a href="./<%= PageName.INDEX_PG %>?action=order">订单</a></li>
+			<li><a href="./<%= PageName.CHATROOM_PG %>">聊天室</a></li>
 <% if(request.getAttribute("IS_ADMIN") != null) { %>
             <li><a href="./<%= PageName.INDEX_PG %>?action=admin">用户管理</a></li>
             <li><a href="./<%= PageName.INDEX_PG %>?action=account">统计</a></li>

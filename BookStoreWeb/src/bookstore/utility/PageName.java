@@ -7,4 +7,5 @@ public class PageName {
 	public static final String ORDER_PG = "order";
 	public static final String ADMIN_PG = "admin";
 	public static final String ACCOUNT_PG = "account";
+	public static final String CHATROOM_PG = "chatroom.jsp";
 }
