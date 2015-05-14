@@ -17,7 +17,8 @@ import bookstore.utility.DBConn;
 	activationConfig = {
 		@ActivationConfigProperty(propertyName="destinationLookup", propertyValue="queue/OrderQueue"),
 		@ActivationConfigProperty(propertyName="destinationType", propertyValue="javax.jms.Queue")
-})
+	},
+	mappedName="queue/OrderQueue")
 public class OrderMessageBean implements MessageListener
 {
 

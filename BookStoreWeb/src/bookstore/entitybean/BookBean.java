@@ -1,7 +1,11 @@
 package bookstore.entitybean;
 
-public class BookBean 
+import java.io.Serializable;
+
+public class BookBean implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
   private String isbn = "";
   private String name = "";
   

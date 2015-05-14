@@ -12,7 +12,7 @@ import bookstore.remote.AccountListRemote;
 import bookstore.remote.QueryResultInfo;
 import bookstore.utility.DBConn;
 
-@Stateless
+@Stateless(mappedName="AccountListBean")
 public class AccountListBean implements AccountListRemote
 {
 	@Override

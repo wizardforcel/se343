@@ -17,7 +17,7 @@ import bookstore.remote.QueryResultInfo;
 import bookstore.remote.ResultInfo;
 import bookstore.utility.DBConn;
 
-@Stateless
+@Stateless(mappedName="BookListBean")
 public class BookListBean implements BookListRemote
 {
 	@Override

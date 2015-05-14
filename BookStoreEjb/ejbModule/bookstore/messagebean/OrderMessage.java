@@ -7,7 +7,7 @@ import bookstore.entitybean.CartItemBean;
 
 public class OrderMessage implements Serializable
 {
-	private static final long serialVersionUID = 101L;
+	private static final long serialVersionUID = 1L;
 	
 	private List<CartItemBean> list;
 	private int uid;

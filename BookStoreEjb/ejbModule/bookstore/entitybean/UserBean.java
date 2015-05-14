@@ -1,11 +1,15 @@
 package bookstore.entitybean;
 
+import java.io.Serializable;
+
 import javax.servlet.http.*;
 
 import bookstore.utility.AuthCode;
 
-public class UserBean
+public class UserBean implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private String uid = "";
 	private String un = "";
 	private String pw = "";

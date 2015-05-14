@@ -11,7 +11,7 @@ public class SessionBeanFactory
 		try 
 		{
 			Context context = new InitialContext();
-			return (UserSysRemote) context.lookup("UserSysBean/remote");
+			return (UserSysRemote) context.lookup("UserSysBean");
 		} 
 		catch (NamingException e) 
 		{
@@ -25,7 +25,7 @@ public class SessionBeanFactory
 		try 
 		{
 			Context context = new InitialContext();
-			return (BookListRemote) context.lookup("BookListBean/remote");
+			return (BookListRemote) context.lookup("BookListBean");
 		} 
 		catch (NamingException e) 
 		{
@@ -39,7 +39,7 @@ public class SessionBeanFactory
 		try 
 		{
 			Context context = new InitialContext();
-			return (CartRemote) context.lookup("CartBean/remote");
+			return (CartRemote) context.lookup("CartBean");
 		} 
 		catch (NamingException e) 
 		{
@@ -53,7 +53,7 @@ public class SessionBeanFactory
 		try 
 		{
 			Context context = new InitialContext();
-			return (OrderRemote) context.lookup("OrderBean/remote");
+			return (OrderRemote) context.lookup("OrderBean");
 		} 
 		catch (NamingException e) 
 		{
@@ -67,7 +67,7 @@ public class SessionBeanFactory
 		try 
 		{
 			Context context = new InitialContext();
-			return (AccountListRemote) context.lookup("AccountListBean/remote");
+			return (AccountListRemote) context.lookup("AccountListBean");
 		} 
 		catch (NamingException e) 
 		{

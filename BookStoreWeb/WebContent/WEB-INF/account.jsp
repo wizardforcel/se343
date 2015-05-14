@@ -32,7 +32,5 @@
 	</table>
 	
   </div><!-- panel -->
-	
-  <script src="./js/book.js" charset="UTF-8"></script>
 	 
 <jsp:include page="./footer.jsp" />

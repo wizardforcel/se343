@@ -16,7 +16,7 @@ import bookstore.remote.UserResultInfo;
 import bookstore.remote.UserSysRemote;
 import bookstore.utility.DBConn;
 
-@Stateless
+@Stateless(mappedName="UserSysBean")
 public class UserSysBean implements UserSysRemote 
 {
 	@Override

@@ -13,7 +13,7 @@ import bookstore.remote.OrderRemote;
 import bookstore.remote.QueryResultInfo;
 import bookstore.utility.DBConn;
 
-@Stateless
+@Stateless(mappedName="OrderBean")
 public class OrderBean implements OrderRemote 
 {
 	@Override

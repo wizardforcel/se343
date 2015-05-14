@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-@Stateless
+@Stateless(mappedName="CartBean")
 public class CartBean implements CartRemote, Serializable
 {
 	private static final long serialVersionUID = 100L;

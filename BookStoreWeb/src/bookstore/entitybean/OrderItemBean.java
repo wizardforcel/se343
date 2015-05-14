@@ -1,7 +1,11 @@
 package bookstore.entitybean;
 
-public class OrderItemBean 
+import java.io.Serializable;
+
+public class OrderItemBean implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int id;
 	private String isbn = "";
 	private int num;
