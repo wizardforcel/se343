@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import bookstore.entitybean.BookBean;
+import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
 import bookstore.remote.BookListRemote;
 import bookstore.remote.CartRemote;
@@ -12,9 +13,14 @@ import bookstore.remote.QueryResultInfo;
 import bookstore.remote.ResultInfo;
 import bookstore.remote.SessionBeanFactory;
 import bookstore.utility.Common;
+import bookstore.utility.MemCart;
 import bookstore.utility.PageName;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 @WebServlet("/" + PageName.BOOK_PG) 
 public class BookServlet extends HttpServlet 
@@ -162,7 +168,8 @@ public class BookServlet extends HttpServlet
 			writer.write(sb.toString());
 	}
 	
-	private void doAddCart()
+	private void doAddCart() 
+			throws IOException
 	{
 		String isbn = request.getParameter("isbn");
 		if(isbn == null) isbn = "";
@@ -180,8 +187,41 @@ public class BookServlet extends HttpServlet
 		}
 		int count = Integer.parseInt(countstr);
 			
-		ResultInfo res = cartbean.add(isbn, count);
-		writer.write(res.toJsonString());
+		//ResultInfo res = cartbean.add(isbn, count);
+		//writer.write(res.toJsonString());
+		
+		String name = bklstbean.getNameById(isbn);
+		if(name.equals(""))
+		{
+			String json = Common.app_error(7, "图书不存在");
+			writer.write(json);
+			return;
+		}
+		
+		MemCart mc = new MemCart(usr.getId());
+	    List<CartItemBean> cart = mc.getCart();
+
+	    boolean exist = false;
+	    for(int i = 0; i < cart.size(); i++)
+	    {
+	    	if(cart.get(i).getIsbn().equals(isbn))
+	    	{
+	    		int ori_count = cart.get(i).getCount();
+	    		cart.get(i).setCount(count + ori_count);
+	    		exist = true;
+	    		break;
+	    	}
+	    }
+		if(!exist)
+		{
+		  CartItemBean item = new CartItemBean(isbn, name, count);
+		  cart.add(item);
+		}
+		
+		mc.setCart(cart);
+		mc.close();
+		
+		writer.write(Common.app_error(0, "成功"));
 	}
 
 }

@@ -8,6 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.jms.*;
 
+import net.spy.memcached.MemcachedClient;
+
 import org.json.simple.JSONObject;
 
 import bookstore.entitybean.CartItemBean;
@@ -21,9 +23,11 @@ import bookstore.remote.ResultInfo;
 import bookstore.remote.SessionBeanFactory;
 import bookstore.remote.UserSysRemote;
 import bookstore.utility.Common;
+import bookstore.utility.MemCart;
 import bookstore.utility.PageName;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,9 +99,12 @@ public class CartServlet extends HttpServlet
 			  writer.print(Common.app_error(2, "未指定操作"));	  
 	}
 	
-	private void doClear()
+	private void doClear() 
+			throws IOException
 	{		
-		cartbean.clear();
+		MemCart mc = new MemCart(usr.getId());
+	    mc.clear();
+	    mc.close();
 		
 		/*ArrayList<CartItemBean> cart 
 		  = (ArrayList<CartItemBean>)session.getAttribute("cart");
@@ -112,7 +119,8 @@ public class CartServlet extends HttpServlet
 	    writer.write(json.toJSONString());*/
 	}		
 	
-	private void doRm()
+	private void doRm() 
+			throws IOException
 	{
 	   	String isbn = request.getParameter("isbn");
 	    if(isbn == null) isbn = "";
@@ -122,13 +130,11 @@ public class CartServlet extends HttpServlet
 	        return;
 	    }
 		    
-	    ResultInfo res = cartbean.rm(isbn);
-	    writer.write(res.toJsonString());
+	    //ResultInfo res = cartbean.rm(isbn);
+	    //writer.write(res.toJsonString());
 	    
-	    /*ArrayList<CartItemBean> cart 
-	      = (ArrayList<CartItemBean>)session.getAttribute("cart");
-	    if(cart == null)
-	    	cart = new ArrayList<CartItemBean>();
+	    MemCart mc = new MemCart(usr.getId());
+	    List<CartItemBean> cart = mc.getCart();
 	    
 	    boolean exist = false;
 	    for(int i = 0; i < cart.size(); i++)
@@ -140,7 +146,8 @@ public class CartServlet extends HttpServlet
 	    		break;
 	    	}
 	    }
-	    session.setAttribute("cart", cart);
+	    mc.setCart(cart);
+	    mc.close();
 	    
 	    JSONObject json = new JSONObject();
 	    if(exist)
@@ -152,10 +159,11 @@ public class CartServlet extends HttpServlet
 	    	json.put("errno", 7);
 	    	json.put("errmsg", "图书不存在");
 	    }
-	    writer.write(json.toJSONString());*/
+	    writer.write(json.toJSONString());
 	}
 	
-	private void doFix()
+	private void doFix() 
+			throws IOException
 	{
     	String isbn = request.getParameter("isbn");
 	    if(isbn == null) isbn = "";
@@ -173,13 +181,11 @@ public class CartServlet extends HttpServlet
 	    }
 	    int count = Integer.parseInt(numstr);
 		    
-	    ResultInfo res = cartbean.fix(isbn, count);
-	    writer.write(res.toJsonString());
+	    //ResultInfo res = cartbean.fix(isbn, count);
+	    //writer.write(res.toJsonString());
 	    
-	    /*ArrayList<CartItemBean> cart
-	      = (ArrayList<CartItemBean>)session.getAttribute("cart");
-	    if(cart == null)
-	    	cart = new ArrayList<CartItemBean>();
+	    MemCart mc = new MemCart(usr.getId());
+	    List<CartItemBean> cart = mc.getCart();
 	    
 	    boolean exist = false;
 	    for(int i = 0; i < cart.size(); i++)
@@ -191,7 +197,8 @@ public class CartServlet extends HttpServlet
 	    		break;
 	    	}
 	    }
-	    session.setAttribute("cart", cart);
+	    mc.setCart(cart);
+	    mc.close();
 	    
 	    JSONObject json = new JSONObject();
 	    if(exist)
@@ -203,7 +210,7 @@ public class CartServlet extends HttpServlet
 	    	json.put("errno", 7);
 	    	json.put("errmsg", "图书不存在");
 	    }
-	    writer.write(json.toJSONString());*/
+	    writer.write(json.toJSONString());
 	}
 	
 	private void doAddOrder()
@@ -219,15 +226,17 @@ public class CartServlet extends HttpServlet
 			//ResultInfo res = cartbean.addOrder(Integer.parseInt(usr.getId()));
 		    //writer.write(res.toJsonString());
 			
-			List<CartItemBean> list = cartbean.getList();
-			if(list.size() == 0)
+			MemCart mc = new MemCart(usr.getId());
+		    List<CartItemBean> cart = mc.getCart();
+			if(cart.size() == 0)
 			{
 				writer.write(Common.app_error(8, "购物车中无图书"));
+				mc.close();
 				return;
 			}
 			
 			OrderMessage order = new OrderMessage();
-			order.setList(list);
+			order.setList(cart);
 			order.setUid(Integer.parseInt(usr.getId()));
 			
 			InitialContext ctx = new InitialContext();
@@ -243,7 +252,8 @@ public class CartServlet extends HttpServlet
 			System.out.println("消息已经发出...");
 			session.close();
 			cnn.close();
-			cartbean.clear();
+			mc.clear();
+			mc.close();
 			writer.write(Common.app_error(0, ""));
 		}
 		catch(Exception ex)

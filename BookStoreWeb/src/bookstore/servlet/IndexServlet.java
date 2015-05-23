@@ -3,17 +3,24 @@ package bookstore.servlet;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
 import bookstore.entitybean.AccountBean;
 import bookstore.entitybean.BookBean;
 import bookstore.entitybean.OrderItemBean;
 import bookstore.entitybean.UserBean;
+import bookstore.entitybean.CartItemBean;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.UserResultInfo;
 import bookstore.utility.Common;
+import bookstore.utility.MemCart;
 import bookstore.remote.*;
 import bookstore.utility.PageName;
+import net.spy.memcached.*;
 
 import java.io.*;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/" + PageName.INDEX_PG)
 public class IndexServlet extends HttpServlet
@@ -247,6 +254,10 @@ public class IndexServlet extends HttpServlet
 	        return;
 	     } 
 	    	 
+	     MemCart mc = new MemCart(usr.getId());
+		 List<CartItemBean> cart = mc.getCart();
+		 mc.close();
+	     
        	 request.setAttribute("cart", cartbean.getList());
       	 request.getRequestDispatcher("./WEB-INF/cart.jsp")
       	        .forward(request, response);

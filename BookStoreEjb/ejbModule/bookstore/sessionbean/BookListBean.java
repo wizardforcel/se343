@@ -12,6 +12,7 @@ import javax.ejb.*;
 import org.json.simple.JSONObject;
 
 import bookstore.entitybean.BookBean;
+import bookstore.entitybean.CartItemBean;
 import bookstore.remote.BookListRemote;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.ResultInfo;
@@ -95,6 +96,30 @@ public class BookListBean implements BookListRemote
 	    { return new ResultInfo(sqlex.getErrorCode() + 1023, "数据库错误：" + sqlex.getMessage()); }
         catch(Exception ex)
         { return new ResultInfo(2, ex.getMessage()); }
+	}
+	
+	@Override
+	public String getNameById(String isbn)
+	{
+		try
+		{
+			Connection conn = DBConn.getDbConn();
+			conn.setAutoCommit(false);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+			
+			String sql = "SELECT * FROM Books WHERE isbn=?";
+		    PreparedStatement stmt = conn.prepareStatement(sql);
+		    stmt.setString(1, isbn);
+		    ResultSet res = stmt.executeQuery();
+		    conn.commit();
+		    if(!res.next())
+	        	return "";
+				
+		    String name = res.getString(2);
+		    return name;
+		
+    	} catch(Exception ex)
+		{ return ""; }
 	}
 	
 }
