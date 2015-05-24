@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar"/>
 	<classpathentry kind="lib" path="lib/spymemcached-2.10.2.jar"/>
+	<classpathentry kind="lib" path="lib/javax.ws.rs-api-2.0.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

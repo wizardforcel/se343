@@ -4,6 +4,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import java.util.*;
+
 import bookstore.entitybean.AccountBean;
 import bookstore.entitybean.BookBean;
 import bookstore.entitybean.OrderItemBean;
@@ -12,6 +14,7 @@ import bookstore.entitybean.CartItemBean;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.UserResultInfo;
 import bookstore.utility.Common;
+import bookstore.utility.I18nDict;
 import bookstore.utility.MemCart;
 import bookstore.remote.*;
 import bookstore.utility.PageName;
@@ -272,6 +275,30 @@ public class IndexServlet extends HttpServlet
             return;
         } 
         
+		//i18n
+		String lang = request.getParameter("lang");
+		if(lang == null)
+		{
+			Cookie[] cos = request.getCookies();
+			boolean exist = false;
+			for(Cookie c : cos)
+			{
+				if(c.getName().equals("lang"))
+				{
+					exist = true;
+					lang = c.getValue();
+					break;
+				}
+			}
+			if(!exist) lang = "zh";
+		}
+		Cookie co = new Cookie("lang", lang);
+		co.setMaxAge(3600 * 24 * 30);
+		response.addCookie(co);
+		Map<String, String> map = I18nDict.getDict(lang);
+		request.setAttribute("dict", map);
+		
+		
 		/*QueryResultInfo<BookBean> res = bklstbean.getList();
         if(res.getErrno() != 0)
         {

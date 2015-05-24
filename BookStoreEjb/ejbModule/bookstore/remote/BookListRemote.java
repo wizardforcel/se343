@@ -9,7 +9,7 @@ public interface BookListRemote
 {
 	public QueryResultInfo<BookBean> getList();
 	public ResultInfo add(String name, String isbn);
-	public ResultInfo rm(String name);
+	public ResultInfo rm(String isbn);
 	String getNameById(String isbn);
 	
 }

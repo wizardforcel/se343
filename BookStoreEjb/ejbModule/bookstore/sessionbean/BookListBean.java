@@ -74,7 +74,7 @@ public class BookListBean implements BookListRemote
 	}
 	
 	@Override
-	public ResultInfo rm(String name)
+	public ResultInfo rm(String isbn)
 	{
 		try
 		{
@@ -82,9 +82,9 @@ public class BookListBean implements BookListRemote
 			conn.setAutoCommit(false);
 	        conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			
-			String sql = "DELETE FROM Books WHERE b_name=?";
+			String sql = "DELETE FROM Books WHERE isbn=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, name);
+			stmt.setString(1, isbn);
 			int effect = stmt.executeUpdate();
 			conn.commit();
 			if(effect == 0)

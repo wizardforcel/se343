@@ -2,11 +2,11 @@ $(function()
 {
 	var cartbtn_cb = function()
 	{
-		var cnt = prompt("请输入数量：", "");
+		var cnt = prompt(dict['input count'], "");
 		if(cnt == null) return;
 		if(!/^\d+$/.test(cnt))
 		{
-			alert('数量必须为纯数字！');
+			alert(dict['count number']);
 		    return;
 		}
 		var row = $(this).parent().parent();
@@ -16,26 +16,26 @@ $(function()
 		{
 		  var json = JSON.parse(res);
 		  if(json.errno == 0)
-			alert("添加成功！");
+			alert(dict["add success"]);
 		  else
-		    alert("添加失败！" + json.errmsg);
+		    alert(dict["add fail"] + json.errmsg);
 		});
 	};
 	$(".cartbtn").click(cartbtn_cb);
 	
 	var rmbtn_cb = function()
 	{
-		if(!confirm('真的要删除吗？'))
+		if(!confirm(dict['cofirm rm']))
 			return;
 		var row = $(this).parent().parent();
-		var name = row.children(":eq(1)").text();
-		$.get("./book?action=rm&name=" + name, function(res)
+		var isbn = row.children(":eq(0)").text();
+		$.get("./book?action=rm&isbn=" + isbn, function(res)
 		{
 			  var json = JSON.parse(res);
 		      if(json.errno == 0)
 		    	  row.remove();
 			  else
-				  alert("删除失败！" + json.errmsg);
+				  alert(dict["rm fail"] + json.errmsg);
 		});
 	};
 	$(".rmbtn").click(rmbtn_cb);
@@ -43,18 +43,18 @@ $(function()
  
 	 $("#addbtn").click(function()
 	 {
-		 var isbn = prompt("请输入ISBN：", "");
+		 var isbn = prompt(dict['input isbn'], "");
 		 if(isbn == null) return;
 		 if(!/^\d+$/.test(isbn))
 		 {
-			 alert('isbn格式有误！');
+			 alert(dict['isbn wrong']);
 			 return;
 		 }
-		 var name = prompt("请输入书名：", "");
+		 var name = prompt(dict['input name'], "");
 		 if(name == null) return;
 		 if(name == "")
 		 {
-			 alert('书名不能为空！');
+			 alert(dict["name empty"]);
 		     return;
 		 }
 		 $.get("./book?action=add&name=" + name + "&isbn=" + isbn, 
@@ -67,8 +67,8 @@ $(function()
 			     var c1 = $("<td>" + isbn + "</td>");
 			     var c2 = $("<td>" + htmlEnco(name) + "</td>");
 			     var c3 = $("<td></td>");
-			     var btn1 = $("<a class=\"cartbtn\">添加到购物车</a>");
-			     var btn2 = $("<a class=\"rmbtn\">删除</a>");
+			     var btn1 = $("<a class=\"cartbtn\">" + dict['add to cart'] + "</a>");
+			     var btn2 = $("<a class=\"rmbtn\">" + dict['delete'] + "</a>");
 			     btn1.click(cartbtn_cb);
 			     btn2.click(rmbtn_cb);
 			     c3.append(btn1);
@@ -82,7 +82,7 @@ $(function()
 			     $(".rmbtn").click(rmbtn_cb);
 		     }
 		     else
-		         alert("添加失败！" + json.errmsg);
+		         alert(dict["add fail"] + json.errmsg);
 		  });
 	  }); 
 	 
@@ -97,7 +97,7 @@ $(function()
 				 var json = JSON.parse(data);
 				 if(json.errno != 0)
 				 {
-					 alert("图书获取失败！" + json.errmsg);
+					 alert(dict["query fail"] + json.errmsg);
 					 return;
 				 }
 				 for(var i in json.data)
@@ -107,8 +107,8 @@ $(function()
 					 var td1 = $("<td>" + book.isbn + "</td>\n");
 					 var td2 = $("<td>" + htmlEnco(book.name) + "</td>\n");
 					 var td3 = $("<td></td>");
-					 var btn1 = $("<a class=\"cartbtn\">添加到购物车</a>");
-					 var btn2 = $("<a class=\"rmbtn\">删除</a>");
+					 var btn1 = $("<a class=\"cartbtn\">" + dict['add to cart'] + "</a>");
+					 var btn2 = $("<a class=\"rmbtn\">" + dict['delete'] + "</a>");
 					 td3.append(btn1);
 					 td3.append(" | ");
 					 td3.append(btn2);
@@ -123,4 +123,10 @@ $(function()
 		 });
 	 };
 	 getBookList();
+	 
+	 $('#selectbtn').click(function()
+	 {
+		var lang = $('#lang-cmb').val();
+		location.href = './index?action=book&lang=' + lang;
+	 });
 });

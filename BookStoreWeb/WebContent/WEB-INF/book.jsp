@@ -5,19 +5,22 @@
 <%@page import="bookstore.entitybean.*" %>
 <%@page import="bookstore.utility.*" %>
 
+<% Map<String, String> dict 
+     = (Map<String, String>)request.getAttribute("dict"); %>
+
 <jsp:include page="./header.jsp" />
 
   <div class="panel panel-primary">
   
     <div class="panel-heading">
-      <h3>图书列表</h3>
+      <h3><%= dict.get("book list") %></h3>
     </div>
 
     <table class="table table-striped" id="book-tb"> 
 	  <tr>
-	    <th>ISBN</th>
-	    <th>名称</th>
-	    <th>操作</th>
+	    <th><%= dict.get("isbn") %></th>
+	    <th><%= dict.get("name") %></th>
+	    <th><%= dict.get("operation") %></th>
 	  </tr>
 	  
 <%
@@ -42,25 +45,38 @@
     <hr />
 	
 	<div class="panel-body">
-      <div class="row btn-row">
+      <div class="row">
 <% if(request.getAttribute("IS_ADMIN") != null) { %>
-        <div class="col-md-3 book-col">
-          <input type="button" id="addbtn" value="添加" class="btn btn-block btn-primary book-btns"/>
+        <div class="col-md-3">
+          <input type="button" id="addbtn" value="<%= dict.get("add") %>" 
+                 class="btn btn-block btn-primary book-btns"/>
 	    </div>
-	    <!--<div class="col-md-3 book-col">
-          <input type="button" id="rmbtn" value="删除" class="btn btn-block btn-primary book-btns"/>
-	    </div>
-	    <div class="col-md-3 book-col">
-          <input type="button" id="fixbtn" value="修改" class="btn btn-block btn-primary book-btns"/>
-	    </div>-->
 <% } %>
-        <!--<div class="col-md-3 book-col">
-          <input type="button" id="cartbtn" value="添加到购物车" class="btn btn-block btn-primary book-btns"/>
-	    </div>-->
       </div>
 	</div><!-- panel-body -->
 	
+	<hr />
+	
+	<div class="panel-body">
+	  <div class="row">
+	    <div class="col-md-3">
+			<select id="lang-cmb" class="form-control">
+				<option value="zh">简体中文</option>
+                <option value="en">English</option>
+			</select>
+	    </div>
+	    <div class="col-md-3">
+	    	<input type="button" id="selectbtn" value="<%= dict.get("select") %>" 
+				   class="btn btn-block btn-primary book-btns"/>
+	    </div>
+	  </div>
+	</div><!-- panel-body -->
+	
   </div><!-- panel -->
+	
+  <script>
+  <%= I18nDict.toJs(dict) %>
+  </script>
 	
   <script src="./js/book.js" charset="UTF-8"></script>
 	 

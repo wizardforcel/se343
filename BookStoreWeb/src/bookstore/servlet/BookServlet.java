@@ -131,15 +131,15 @@ public class BookServlet extends HttpServlet
 		       	return;
 		    }	
 					
-			String name = request.getParameter("name");
-		    if(name == null) name = "";
-		    if(name.length() == 0)
-		    {
-		        writer.write(Common.app_error(4, "请输入名称"));
-		        return;
-		    }
+			String isbn = request.getParameter("isbn");
+		    if(isbn == null) isbn = "";
+		    if(!isbn.matches("^\\d+$"))
+	        {
+	        	writer.write(Common.app_error(4, "ISBN应为数字"));
+	        	return;
+	        }
 			        
-		    ResultInfo res = bklstbean.rm(name);
+		    ResultInfo res = bklstbean.rm(isbn);
 		    writer.write(res.toJsonString());
 	}
 	
