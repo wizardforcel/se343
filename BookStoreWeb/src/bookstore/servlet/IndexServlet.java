@@ -1,16 +1,16 @@
 package bookstore.servlet;
 
+import javax.security.auth.login.Configuration;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.javaXmlTypeMappingType;
+
 import java.util.*;
 
-import bookstore.entitybean.AccountBean;
-import bookstore.entitybean.BookBean;
-import bookstore.entitybean.OrderItemBean;
-import bookstore.entitybean.UserBean;
-import bookstore.entitybean.CartItemBean;
+import bookstore.jaas.*;
+import bookstore.entitybean.*;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.UserResultInfo;
 import bookstore.utility.Common;
@@ -81,7 +81,7 @@ public class IndexServlet extends HttpServlet
 		if(usr.isValid())
 		{
 		    request.setAttribute("IS_LOGIN", true);
-			if(usr.getId().compareTo("1") == 0)
+			if(usr.getId().equals("1"))
 			    request.setAttribute("IS_ADMIN", true);
 		}
 		
@@ -121,13 +121,15 @@ public class IndexServlet extends HttpServlet
 				request.setAttribute("IS_ADMIN", true);
 			else
 			{
-				writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "\";</script>");
+				response.setStatus(301);
+				response.setHeader("Location", "./" + PageName.INDEX_PG);
 		        return;
 			}
 		}
 		else
 	    {
-	        writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "\";</script>");
+			response.setStatus(301);
+			response.setHeader("Location", "./" + PageName.INDEX_PG);
 	        return;
 	    }
 		
@@ -149,7 +151,8 @@ public class IndexServlet extends HttpServlet
 			
 		if(usr.isValid())
 		{
-		    writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "\";</script>");
+			response.setStatus(301);
+			response.setHeader("Location", "./" + PageName.INDEX_PG);
 		    return;
 		}
 		
@@ -176,16 +179,19 @@ public class IndexServlet extends HttpServlet
 		}
 		pw = Common.MD5(pw);
 		
-		UserResultInfo res = usrsysbean.login(un, pw);
-		if(res.getErrno() == 0)
+		SimpleLoginModule slm = new SimpleLoginModule();
+		SimpleCallbackHandler handler = new SimpleCallbackHandler(un, pw);
+		slm.initialize(null, handler, null, null);
+		
+		if(slm.login())
 		{
-			int uid = res.getUid();
+			int uid = handler.getId();
 			usr.setUInfo(String.valueOf(uid), un, pw);
 			usr.setCookie(response);
 			writer.write(Common.show_msg("登录成功！", "./" + PageName.INDEX_PG));
 		}
 		else
-		    writer.write(Common.show_msg("登录失败！" + res.getErrmsg(), "./" + PageName.INDEX_PG));
+		    writer.write(Common.show_msg("登录失败！" + handler.getErrmsg(), "./" + PageName.INDEX_PG));
 		
 		} catch(Exception ex)
 		{ writer.write(Common.show_msg("登录失败！" + ex.getMessage(), "./" + PageName.INDEX_PG)); }
@@ -198,7 +204,8 @@ public class IndexServlet extends HttpServlet
   		     Cookie co = new Cookie("token", "");
   		     response.addCookie(co);
   	     }
-   	     writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "\";</script>");
+		 response.setStatus(301);
+		 response.setHeader("Location", "./" + PageName.INDEX_PG);
 	}
 	
 	private void doReg()
@@ -207,8 +214,8 @@ public class IndexServlet extends HttpServlet
     		
 	    if(usr.isValid())
 	    {
-	         writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "\";</script>");
-	         return;
+	    	response.setStatus(301);
+			response.setHeader("Location", "./" + PageName.INDEX_PG);
 	    }  
 	        	  
 	    String un = request.getParameter("un"),
@@ -271,7 +278,8 @@ public class IndexServlet extends HttpServlet
 	{
 		if(!usr.isValid())
         {
-            writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "?action=login\";</script>");
+			response.setStatus(301);
+			response.setHeader("Location", "./" + PageName.INDEX_PG);
             return;
         } 
         
@@ -321,7 +329,8 @@ public class IndexServlet extends HttpServlet
 	{
 		if(!usr.isValid())
         {
-            writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "?action=login\";</script>");
+			response.setStatus(301);
+			response.setHeader("Location", "./" + PageName.INDEX_PG);
             return;
         } 
 		
@@ -348,7 +357,8 @@ public class IndexServlet extends HttpServlet
 	{			
 		if(usr.getId().compareTo("1") != 0)
 		{
-			writer.write("<script>location.href=\"./" + PageName.INDEX_PG + "?action=login\";</script>");
+			response.setStatus(301);
+			response.setHeader("Location", "./" + PageName.INDEX_PG);
             return;
 		}
 		

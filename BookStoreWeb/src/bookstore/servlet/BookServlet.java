@@ -4,6 +4,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.json.simple.*;
+
 import bookstore.entitybean.BookBean;
 import bookstore.entitybean.CartItemBean;
 import bookstore.entitybean.UserBean;
@@ -153,19 +155,18 @@ public class BookServlet extends HttpServlet
 				return;
 			}
 			
-			StringBuffer sb = new StringBuffer();
-			sb.append("{\"errno\":0,\"data\":[");
+			JSONObject json = new JSONObject();
+			json.put("errno", 0);
+			JSONArray arr = new JSONArray();
 			for(BookBean b : res.getList())
 			{
-				sb.append("{\"isbn\":")
-				  .append(b.getIsbn())
-				  .append(",\"name\":\"")
-				  .append(Common.htmlEnco(b.getName()))
-				  .append("\"},");
+				JSONObject o = new JSONObject();
+				o.put("isbn", b.getIsbn());
+				o.put("name", Common.htmlEnco(b.getName()));
+				arr.add(o);
 			}
-			sb.setLength(sb.length() - 1);
-			sb.append("]}");
-			writer.write(sb.toString());
+			json.put("data", arr);
+			writer.write(json.toJSONString());
 	}
 	
 	private void doAddCart() 

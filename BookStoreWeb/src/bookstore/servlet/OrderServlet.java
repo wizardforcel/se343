@@ -8,11 +8,16 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import org.json.simple.*;
+import org.json.simple.parser.*;
+
+import sun.org.mozilla.javascript.internal.json.JsonParser;
 import bookstore.entitybean.OrderItemBean;
 import bookstore.entitybean.UserBean;
 import bookstore.remote.OrderRemote;
 import bookstore.remote.QueryResultInfo;
 import bookstore.remote.SessionBeanFactory;
+import bookstore.utility.AuthCode;
 import bookstore.utility.Common;
 import bookstore.utility.PageName;
 
@@ -70,32 +75,58 @@ public class OrderServlet extends HttpServlet
 		  doQuery();
 	}
 	
-	private void doQuery()
+	private void doQuery() 
 	{
-		QueryResultInfo<OrderItemBean> res = ordbean.getList(usr.getId());
+		try {
+			
+		String jsonStr = ordbean.getListCryto(usr.getId());
+		jsonStr = AuthCode.Decode(jsonStr, "order");
+		
+		JSONObject json = (JSONObject) new JSONParser().parse(jsonStr);
+		if(!json.containsKey("list"))
+		{
+			writer.write(json.toJSONString());
+			return;
+		}
+		
+		JSONArray arr = (JSONArray) json.get("list");
+		json.remove("list");
+		for(int i = 0; i < arr.size(); i++)
+		{
+			JSONObject o = (JSONObject) arr.get(i);
+			o.put("count", o.get("num"));
+			o.remove("num");
+			long time = (long) o.get("time");
+			o.put("date", new Date(time * 1000).toString());
+			o.remove("time");
+		}
+		json.put("data", arr);
+		writer.write(json.toJSONString());
+		
+		/*QueryResultInfo<OrderItemBean> res = ordbean.getList(usr.getId());
 		if(res.getErrno() != 0)
 		{
 			writer.write(res.toJsonString());
 			return;
 		}
 		
-		StringBuffer sb = new StringBuffer();
-		sb.append("{\"errno\":0,\"data\":[");
+		JSONObject json = new JSONObject();
+		json.put("errno", 0);
+		JSONArray arr = new JSONArray();
 		for(OrderItemBean item : res.getList())
 		{
-			sb.append("{\"id\":")
-			  .append(item.getId())
-			  .append(",\"isbn\":")
-			  .append(item.getIsbn())
-			  .append(",\"count\":")
-			  .append(item.getNum())
-			  .append(",\"date\":\"")
-			  .append(new Date(item.getTime() * 1000).toString())
-			  .append("\"},");
+			JSONObject o = new JSONObject();
+			o.put("id", item.getId());
+			o.put("isbn", item.getIsbn());
+			o.put("count", item.getNum());
+			o.put("date", new Date(item.getTime() * 1000).toString());
+			arr.add(o);
 		}
-		sb.setLength(sb.length() - 1);
-		sb.append("]}");
-		writer.write(sb.toString());
+		json.put("data", arr);
+		writer.write(json.toJSONString());*/
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

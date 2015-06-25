@@ -5,12 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.ejb.*;
+
+import org.json.simple.*;
 
 import bookstore.entitybean.OrderItemBean;
 import bookstore.remote.OrderRemote;
 import bookstore.remote.QueryResultInfo;
+import bookstore.utility.AuthCode;
 import bookstore.utility.DBConn;
 
 @Stateless(mappedName="OrderBean")
@@ -51,6 +55,28 @@ public class OrderBean implements OrderRemote
 		{ 
 			return new QueryResultInfo<OrderItemBean>(1, ex.getMessage(), null);
 		}
+	}
+
+	@Override
+	public String getListCryto(String uid) 
+	{
+		QueryResultInfo<OrderItemBean> r = getList(uid);
+		JSONObject json = new JSONObject();
+		json.put("errno", r.getErrno());
+		json.put("errmsg", r.getErrmsg());
+		JSONArray arr = new JSONArray();
+		for(OrderItemBean e : r.getList())
+		{
+			JSONObject o = new JSONObject();
+			o.put("id", e.getId());
+			o.put("isbn", e.getIsbn());
+			o.put("num", e.getNum());
+			o.put("time", e.getTime());
+			arr.add(o);
+		}
+		json.put("list", arr);
+		String jsonStr = json.toJSONString();
+		return AuthCode.Encode(jsonStr, "order");
 	}
 	
 	

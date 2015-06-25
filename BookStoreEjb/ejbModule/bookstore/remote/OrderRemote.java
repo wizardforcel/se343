@@ -8,4 +8,6 @@ import bookstore.entitybean.OrderItemBean;
 public interface OrderRemote 
 {
 	public QueryResultInfo<OrderItemBean> getList(String uid);
+	
+	public String getListCryto(String uid);
 }

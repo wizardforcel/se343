@@ -2,6 +2,8 @@ package bookstore.remote;
 
 import java.util.*;
 
+import org.json.simple.JSONObject;
+
 public class QueryResultInfo<T> extends ResultInfo 
 {
 
