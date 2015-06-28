@@ -22,7 +22,7 @@ public class AccountListBean implements AccountListRemote
 		{
 			Connection conn = DBConn.getDbConn();
 			conn.setAutoCommit(false);
-	        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			
 			String sql = "SELECT u_id, sum(b_num) FROM orders " +
 	                     "natural join orderitems GROUP BY u_id";

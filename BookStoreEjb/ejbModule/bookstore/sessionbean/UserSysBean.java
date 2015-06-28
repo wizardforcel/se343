@@ -109,7 +109,7 @@ public class UserSysBean implements UserSysRemote
 		{
 			Connection conn = DBConn.getDbConn();
 			conn.setAutoCommit(false);
-	        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 	     	 
 	      	String sql = "SELECT u_id, u_un FROM users ORDER BY u_id ASC";
 	      	Statement stmt = conn.createStatement();

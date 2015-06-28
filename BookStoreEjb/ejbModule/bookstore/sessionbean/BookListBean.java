@@ -28,7 +28,7 @@ public class BookListBean implements BookListRemote
 	       	 
 	        Connection conn = DBConn.getDbConn();
 	        conn.setAutoCommit(false);
-	        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 	        
 	        String sql = "SELECT * FROM Books";
 	        Statement stmt = conn.createStatement();
@@ -105,7 +105,7 @@ public class BookListBean implements BookListRemote
 		{
 			Connection conn = DBConn.getDbConn();
 			conn.setAutoCommit(false);
-	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			
 			String sql = "SELECT * FROM Books WHERE isbn=?";
 		    PreparedStatement stmt = conn.prepareStatement(sql);

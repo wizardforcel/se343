@@ -27,7 +27,7 @@ public class OrderBean implements OrderRemote
 		{
 			Connection conn = DBConn.getDbConn();
 			conn.setAutoCommit(false);
-	        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+	        conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 			
 			String sql = "SELECT o_id, isbn, b_num, o_time " +
 	                   "FROM orders natural join orderitems where u_id=?";
