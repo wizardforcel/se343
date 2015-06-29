@@ -1,4 +1,4 @@
-package bookstore.restful;
+package bookstore.ws;
 
 import java.util.*;
 import java.io.*;
